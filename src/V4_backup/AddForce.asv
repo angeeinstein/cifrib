@@ -1,0 +1,13 @@
+% Add Force inputs to main Structure (position, angle,force)
+function AddForce(F_1, F1_Pos, F1_a)
+    
+    global main Finf;
+    helpF = [F_1; F1_Pos; F1_a];        % integrate values to help vector
+
+    % conect vectors with each other & Update Structure
+    main.Force = cat(2, main.Force, helpF);
+    
+    % Add New ID to 
+    ImpOrder(1);                        % Create ID
+
+end

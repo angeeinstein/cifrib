@@ -1,0 +1,3 @@
+            app.MomentEditField.Value = subs(result.Mb,x,app.PositionEditField.Value);
+            app.ZForceEditField.Value = subs(result.Fz,x,app.PositionEditField.Value);
+            app.XForceEditField.Value = subs(result.Fx,x,app.PositionEditField.Value);
