@@ -1,54 +1,60 @@
-Einstieg ins Projekt:
+## Einstieg ins Projekt
 
-Git installieren:
-Windows: Auf git-scm.com herunterladen und installieren
-Linux (z. B. Debian/Ubuntu): "sudo apt-get install git"
-macOS: "brew install git" oder Git ist oft schon vorinstalliert
+1. **Git installieren:**  
+   - Windows: Git von [https://git-scm.com/download/win](https://git-scm.com/download/win) herunterladen und installieren  
+   - Linux (z. B. Debian/Ubuntu): `sudo apt-get install git`  
+   - macOS: `brew install git` oder Git ist oft bereits vorinstalliert
 
-Repository klonen:
-Ihr erhaltet eine URL. Gebt sie im Terminal ein:
-git clone https://github.com/benutzername/projektname.git
-cd projektname
+2. **Repository klonen:**  
+   - Erhaltet die URL vom Projektverantwortlichen  
+   - Dann im Terminal:  
+     - `git clone https://github.com/benutzername/projektname.git`  
+     - `cd projektname`
 
-Am Projekt arbeiten:
-Bevor ihr Änderungen macht, holt den aktuellen Stand:
-git pull
+3. **Am Projekt arbeiten:**  
+   - Bevor ihr neue Änderungen macht, immer zuerst den aktuellen Stand holen:  
+     - `git pull`
 
-Danach könnt ihr Dateien bearbeiten und neue Funktionen hinzufügen.
+   Anschließend Dateien wie gewohnt bearbeiten.
 
-Änderungen einchecken:
-git add .
-git commit -m "Beschreibe hier deine Änderungen"
-git push
+4. **Änderungen einchecken:**  
+   - Dateien zur Staging-Area hinzufügen:  
+     - `git add .`
+   - Änderungen committen:  
+     - `git commit -m "Kurze Beschreibung der Änderungen"`
+   - Aktuelle Commits zum zentralen Repository hochladen:  
+     - `git push`
 
-Damit werden eure Änderungen lokal festgehalten und ins zentrale Repository hochgeladen.
+## Wichtige Git-Befehle
 
-Wichtige Git-Befehle:
+- **Status anzeigen:**  
+  `git status`  
+  Zeigt, welche Dateien geändert wurden und ob noch etwas zum Committen bereitsteht.
 
-• Status anzeigen:
-git status
-Zeigt geänderte Dateien und ob noch etwas zum Committen bereitsteht.
+- **Änderungen zur Stage hinzufügen:**  
+  `git add .`  
+  Fügt alle geänderten Dateien zum nächsten Commit hinzu.
 
-• Änderungen zur Stage hinzufügen:
-git add .
-Fügt alle geänderten Dateien zum nächsten Commit hinzu.
+- **Commit erstellen:**  
+  `git commit -m "Beschreibung"`  
+  Speichert den aktuellen Stand als neuen Versionspunkt.
 
-• Commit erstellen:
-git commit -m "Kurze Beschreibung der Änderung"
-Speichert den aktuellen Stand als neuen Versionspunkt.
+- **Änderungen hochladen (Push):**  
+  `git push origin main`  
+  Überträgt lokale Commits ins zentrale Repository.
 
-• Änderungen hochladen (Push):
-git push origin main
-Überträgt alle lokalen Commits ins zentrale Repository.
+- **Aktuellen Stand holen (Pull):**  
+  `git pull`  
+  Holt neue Commits vom zentralen Repo und integriert sie lokal.
 
-• Aktuellen Stand holen (Pull):
-git pull
-Holt neue Commits vom zentralen Repo und integriert diese lokal.
+- **Historie ansehen:**  
+  `git log`  
+  Zeigt alle vergangenen Commits mit Beschreibung.
 
-• Historie ansehen:
-git log
-Zeigt alle vergangenen Commits mit Beschreibung.
+- **Branch erstellen und wechseln:**  
+  `git checkout -b neuer-branch`  
+  Erstellt einen neuen Entwicklungszweig und wechselt direkt darauf.
 
-• Branch erstellen und wechseln:
-git checkout -b neuer-branch
-Erstellt einen neuen Entwicklungszweig und wechselt direkt dorthin.
+---
+
+Mit diesen Schritten und Befehlen könnt ihr schnell und einfach am gemeinsamen Projekt mitarbeiten. Sobald ihr damit vertraut seid, könnt ihr auch komplexere Git-Funktionen wie Branch-Management, Merge-Konflikte lösen oder Pull Requests nutzen.
