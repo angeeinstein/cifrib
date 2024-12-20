@@ -2,9 +2,11 @@
 function Redo(app)
 
     global main
+     
+    % Activate Redo Sign
+    main.Redoe = true;
     
-    % add last deleated 
-    
+    % add last deleated
     % Force
     if main.BckInf(2,end) == 1
         AddForce(main.BckInf(3,end), main.BckInf(4,end), main.BckInf(5,end));
@@ -25,7 +27,13 @@ function Redo(app)
     % Deleate Last Back Information & Update Structure
     main.BckInf(:,end) = [];
 
+    % Plot All
+    PlotAll(app);
+
     % Update Static Definition
     app.EditField_StaticDefinition1.Value = StaticDefinitionBearing;
     app.EditField_StaticDefinition2.Value = StaticDefinitionHinge;
+
+    % Deactivate Redo Sign
+    main.Redoe = false;
 end

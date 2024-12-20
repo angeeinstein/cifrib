@@ -1,7 +1,7 @@
 function structureinitiate()
 
     global main loadID results;
-    main = struct('Force', [], 'Torque', [], 'Distl', [],'Bearing', [],'Joint', [],'ImpInf', [], 'BckInf', [], 'DelInf', [], 'BarLgh', [], 'StaticDefinition', []);
+    main = struct('Force', [], 'Torque', [], 'Distl', [],'Bearing', [],'Joint', [],'ImpInf', [], 'BckInf', [], 'DelInf', [], 'BarLgh', [], 'StaticDefinition', [], 'Redoe', []);
     results = struct ('Fz', [],'Fx', [],'Mb', [],'BearingForces', []);
     
 
@@ -14,8 +14,9 @@ function structureinitiate()
 
     % Add index list for tracability (StepBack)
     ImpInf = zeros(2,0);    % Implementation Information (loadID, loadtype)
-    BckInf = zeros(9,0);    % Back Information (loadtype, loadID, INDIVIDUEL...)
+    BckInf = zeros(9,0);    % Back Information ( loadID, loadtype, INDIVIDUEL...)
     loadID = 1000;          % Assin every load its own loadID
+    Redoe = false;
     DelInf = zeros(8,0);
 
     %Integrate load information matrixes to main Structure
@@ -27,6 +28,7 @@ function structureinitiate()
     main.ImpInf = ImpInf;
     main.BckInf = BckInf;
     main.DelInf = DelInf;
+    main.Redoe = Redoe;
 
 
 end

@@ -66,7 +66,7 @@ function Undo(app)
         helpDel1 = main.Joint(:,end);        
         helpDel2 = main.ImpInf(:,end);         
 
-        heplDel3 = cat(1,helpDel2,helpDel1,0,0,0);
+        heplDel3 = cat(1,helpDel2,helpDel1,0,0);
 
         % Conect vectors with each other & Update Structure
         main.BckInf = cat(2,main.BckInf,heplDel3);                   
