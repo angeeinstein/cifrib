@@ -280,4 +280,3 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     % legend('q_z(x)','F_z(x)','M_b(x)','F_x(x)');
     % title('Verteilte Last, Scherkraft, Moment, und horizontale Kraft');
 end
-
