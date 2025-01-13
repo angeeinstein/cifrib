@@ -9,7 +9,7 @@ function Redo(app)
     % add last deleated
     % Force
     if main.BckInf(2,end) == 1
-        AddForce(main.BckInf(3,end), main.BckInf(4,end), main.BckInf(5,end));
+        AddForce(main.BckInf(5,end), main.BckInf(3,end), main.BckInf(4,end));
     % Torque
     elseif main.BckInf(2,end) == 2
         AddTorque(main.BckInf(3,end),main.BckInf(4,end));
