@@ -1,10 +1,10 @@
-function PlotAllSetup(app,exponent)
+function PlotAllSetup(app)
 
     cla(app.UIAxes_Setup)
     PlotBearing(app);
     PlotHinge(app);
     PlotForce(app);
     PlotTourque(app);
-    PlotDistl(app,exponent);
+    PlotDistl(app);
 
 end

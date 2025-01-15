@@ -2,9 +2,9 @@ function PlotDistl(app,exponent)
 global main;
     [~,j] = size(main.Distl);
     for i =1:j
-         constshape1exponent = main.Distl(5,i);
+         constshape1exponent = main.Distl(4,i);
     end
-    constshape1exponent = exponent;
+    %constshape1exponent = exponent;
 
     constshape1_startpos = main.Distl(1,i);    % start position of constshape1
     constshape1_endpos = main.Distl(2,i);   % end position of constshape1
