@@ -3,8 +3,8 @@ global main;
     [~,j] = size(main.Force);
     for i=1:j
         % Plot
-            arrow2_angle = main.Force(3,i);    % angle of arrow2
-            arrow2_pos = main.Force(2,i);   % position of arrow2
+            arrow2_angle = main.Force(2,i);    % angle of arrow2
+            arrow2_pos = main.Force(1,i);   % position of arrow2
                 
         % define arrow2
             arrow2_length = 2;
