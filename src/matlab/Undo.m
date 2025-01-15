@@ -6,7 +6,7 @@ function Undo(app)
     % If Last Implementation = Force
     if main.ImpInf(2,end) == 1
 
-        helpDel1 = main.Force(:,end);        % helpDel1 = last Force of main.Force
+        helpDel1 = [main.Force(3,end); main.Force(2,end); main.Force(1,end); main.Force(4,end)];       % helpDel1 = last Force of main.Force
         helpDel2 = main.ImpInf(:,end);       % helpDel2 = last Implementation
 
         heplDel3 = cat(1,helpDel2,helpDel1,0,0,0); % Combine helpDel1 & helpDel2

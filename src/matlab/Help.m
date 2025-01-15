@@ -34,7 +34,8 @@ classdef Help < matlab.apps.AppBase
             app.Label.FontWeight = 'normal';
             app.Label.Position = [5 60 640 401];
             app.Label.Text = {'1. Step: Define the bar length in the bar length field.';''; 
-                '2. Step: Implement the bearings, by choosing the bearing you want in the structual support'; 'panel and then choosing the position. Keep in mind that the clamped support is only available'; 'at position 0. If you are happy with your input, press the implement button at the end' ; 'of the panel.' ;''; 
+                'Step 2: Implementing the Bearings';
+                'Select the desired bearing from the "Supports" panel and specify its position. Please note that the fixed support is only available at the start and end positions. Once you are satisfied with your selection, confirm your choice by clicking the "Add" button at the end of the panel.'
                 '3. Step: Implement the punctual forces and moments in the add loads panel, define the angle,'; 'the strength and the position. Then press the implement button at the bottom of the' ; 'add loads panel.' ;''; 
                 '4. Step: Implement the line loads by choosing between a constant, linear and quadratic'; 'line load in the line loads panel. Define the pitch, which is the coefficient of the chosen'; 'exponet, the start point, the end point and the start height of the line load. You can also'; 'implement a negative pitch. If you are satisfied with your values, press the implement button'; 'at the end of the panel.';'';
                 '5. Step: If you made a mistake, you can always reset. Before pressing calculate, check if the'; 'lamp shines green, which means your whole calculation is statically defined. If not, you either'; 'have to reset or implement more structual supports. If you have done everything right and'; 'pressed calculate, you should now see the the force distribution.'};
