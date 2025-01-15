@@ -12,11 +12,9 @@ global main;
         % define constshape1
             constshape1scale = (main.BarLgh/2); %(1 / bar1length * (constshape1_endpos - constshape1_startpos));    % size of the shape = 1/10 of bar length 
             constshape1direction = sign(main.Distl(5,i));   % 1 or -1 sign(x)
+            %disp(constshape1direction)
             constshape1_startheight = sign(main.Distl(3,i));
         %constshape1_endheight = ((constshape1_endpos - constshape1_startpos)^1) * constshape1_startpos;
-        whos constshape1_startpos constshape1_endpos
-        disp(class(constshape1_startpos)); % Display the type
-        disp(size(constshape1_startpos)); % Display the dimensions
         disp(constshape1_startpos);       % Display the actual value
         if isempty(constshape1_startpos)
             constshape1_startpos = 0; % Or any default scalar value
