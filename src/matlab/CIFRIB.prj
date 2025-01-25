@@ -49,6 +49,8 @@
 	 input arguments</param.help.text>
     <unset>
       <param.version />
+      <param.authnamewatermark />
+      <param.email />
       <param.company />
       <param.summary />
       <param.description />
@@ -125,7 +127,7 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2024a</root>
+      <root>C:\Program Files\MATLAB\R2024b</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="embeddedcoder" />
