@@ -112,6 +112,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
             end
             if hasFx==1
                 cntLocal = cntLocal+1;
+                 val = val + unknow(cntLocal)*((xx - xB)>0);
             end
             if hasM==1
                 cntLocal = cntLocal+1;
