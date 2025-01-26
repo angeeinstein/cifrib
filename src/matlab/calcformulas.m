@@ -19,7 +19,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
             - q0        .* ((x - x1) > 0);
     end
 
-    q_odefun = @(x, Fval) -q(x); 
+    q_odefun = @(x, Fval) -q(x);
     x_span   = [0, l];
     F0       = 0;
     [x_num, F_num] = ode45(q_odefun, x_span, F0);
@@ -108,10 +108,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
 
             if hasFz==1
                 cntLocal = cntLocal+1; 
+                val = val + unknow(cntLocal)*((xx - xB)>0);
             end
             if hasFx==1
                 cntLocal = cntLocal+1;
-                val = val + unknow(cntLocal)*((xx - xB)>0);
             end
             if hasM==1
                 cntLocal = cntLocal+1;
@@ -231,7 +231,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     initGuess = zeros(length(symsVec),1);  % Startwert 0
     options   = optimset('Display','off'); % fsolve Optionen
     sol = fsolve(@residual, initGuess, options);
-    q_old = q;  % just for plotting or reference
+    q_old = q;
 
     % Finale Fz(x)- und Mb(x)-Funktionen:
     Fz = @(xx) Fz_full(xx, sol);
@@ -243,13 +243,14 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     results.Fx = Fx;
 
     % Auflagerreaktionen protokollieren:
-    bearingReactions = nan(jBear,3);
+    bearingReactions = nan(jBear,4);
     cnt = 0;
+    indx=[];
     for ib=1:jBear
         hasFz = main.Bearing(2,ib);
         hasFx = main.Bearing(3,ib);
         hasM  = main.Bearing(4,ib);
-
+        
         RxVal = NaN; RzVal = NaN; MzVal = NaN;
 
         if hasFz==1
@@ -265,7 +266,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
             MzVal = sol(cnt);
         end
 
-        bearingReactions(ib,:) = [RxVal, RzVal, MzVal];
+        bearingReactions(ib,:) = [ib,RxVal,RzVal, MzVal];
     end
     results.BearingForces = bearingReactions;
 
