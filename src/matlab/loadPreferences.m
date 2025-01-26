@@ -1,6 +1,18 @@
-function loadUnits(app)
+function loadPreferences(app)
 % Load the units structure
-            global unitsData
+            global unitsData Preferences
+
+            try
+                load('Preferences.mat', 'Preferences');
+                
+            catch
+                warning('Error loading preferences. Using default values.');
+                Preferences.Units.Value = 'metric';
+                Preferences.Language.Value = 'English';
+            end
+
+
+
             if 1%isfile('unitsData.mat')
                 loadedData = load('unitsData.mat', 'unitsData');
                 unitsData = loadedData.unitsData; % Store in app property
