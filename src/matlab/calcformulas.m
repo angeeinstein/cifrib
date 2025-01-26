@@ -282,4 +282,5 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
     % plot(xPlot, arrayfun(Fx, xPlot),     'm', 'LineWidth',1.5);
     % legend('q_z(x)','F_z(x)','M_b(x)','F_x(x)');
     % title('Verteilte Last, Scherkraft, Moment, und horizontale Kraft');
+    %ver2
 end
