@@ -108,7 +108,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
 
             if hasFz==1
                 cntLocal = cntLocal+1; 
-                val = val + unknow(cntLocal)*((xx - xB)>0);
+                %val = val + unknow(cntLocal)*((xx - xB)>0);
             end
             if hasFx==1
                 cntLocal = cntLocal+1;
@@ -198,10 +198,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         resCnt = 1;
         res = [];
 
-        res(resCnt) = Fz_full(l, unknow); 
+        res(resCnt) = Fz_full(l*1.0001, unknow);
         resCnt = resCnt+1;
 
-        res(resCnt) = Mb_full(l, unknow);
+        res(resCnt) = Mb_full(l*1.0001, unknow);
         resCnt = resCnt+1;
 
 
@@ -229,7 +229,9 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     end
 
     initGuess = zeros(length(symsVec),1);  % Startwert 0
-    options   = optimset('Display','off'); % fsolve Optionen
+options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
+                   'MaxIter',    1000, ...
+                   'MaxFunEvals', 2000);
     sol = fsolve(@residual, initGuess, options);
     q_old = q;
 
