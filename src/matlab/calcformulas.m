@@ -199,10 +199,14 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         resCnt = 1;
         res = [];
 
+        res(resCnt) = Fx_full(l*1.0001, unknow);
+        resCnt = resCnt+1;
+
+        
         res(resCnt) = Fz_full(l*1.0001, unknow);
         resCnt = resCnt+1;
 
-        res(resCnt) = Mb_full(l*1.0001, unknow);
+        res(resCnt) = Mb_full(l*1, unknow);
         resCnt = resCnt+1;
 
 
@@ -229,12 +233,12 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         end
     end
 
-    initGuess = zeros(length(symsVec),1);  % Startwert 0
-options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
+   initGuess = zeros(length(symsVec),1);  % Startwert 0
+    options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
                    'MaxIter',    1000, ...
                    'MaxFunEvals', 2000);
     sol = fsolve(@residual, initGuess, options);
-    q_old = q;
+    %q_old = q;
 
     % Finale Fz(x)- und Mb(x)-Funktionen:
     Fz = @(xx) Fz_full(xx, sol);
@@ -245,7 +249,7 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
     results.Mb = Mb;
     results.Fx = Fx;
 
-    % Auflagerreaktionen protokollieren:
+    % Auflagerreaktionen protokollieren::
     bearingReactions = nan(jBear,4);
     cnt = 0;
     for ib = 1:jBear
@@ -275,6 +279,20 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
 
     if main.Bearing(1,jBear)==l
     bearingReactions(jBear, :) = [jBear, -results.Fx(l), -results.Fz(l), -results.Mb(l*1.00001)];
+    
+    if main.Bearing(3,jBear)==0
+    bearingReactions(jBear, :) = [jBear, NaN, -results.Fz(l), -results.Mb(l*1.00001)];
+    end
+
+    if main.Bearing(2,ib) == 0% hasFz
+    bearingReactions(jBear, 3) = NaN;
+    end
+
+      if main.Bearing(4,ib) == 0 % hasMb
+    bearingReactions(jBear, 4) = NaN;
+    end
+    
+
     end
 
     results.BearingForces = bearingReactions;
