@@ -279,7 +279,7 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
 
     results.BearingForces = bearingReactions;
 
-    %######################################################
+    %######################################################fggfgfgf
     % figure; hold on; grid on;
     % xPlot = linspace(0,l,200);
     % 
