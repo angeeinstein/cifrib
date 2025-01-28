@@ -248,29 +248,35 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
     % Auflagerreaktionen protokollieren:
     bearingReactions = nan(jBear,4);
     cnt = 0;
-    indx=[];
-    for ib=1:jBear
-        hasFz = main.Bearing(2,ib);
-        hasFx = main.Bearing(3,ib);
-        hasM  = main.Bearing(4,ib);
-        
-        RxVal = NaN; RzVal = NaN; MzVal = NaN;
+    for ib = 1:jBear
+    RxVal = NaN; RzVal = NaN; MzVal = NaN;
 
-        if hasFz==1
-            cnt=cnt+1;
-            RzVal = sol(cnt);
-        end
-        if hasFx==1
-            cnt=cnt+1;
-            RxVal = sol(cnt);
-        end
-        if hasM==1
-            cnt=cnt+1;
-            MzVal = sol(cnt);
-        end
-
-        bearingReactions(ib,:) = [ib,RxVal,RzVal, MzVal];
+    % Prüfen auf Fx
+    if main.Bearing(3,ib) == 1 % hasFx
+        cnt = cnt + 1;
+        RxVal = sol(cnt);
     end
+
+    % Prüfen auf Fz
+    if main.Bearing(2,ib) == 1 % hasFz
+        cnt = cnt + 1;
+        RzVal = sol(cnt);
+    end
+
+    % Prüfen auf Moment
+    if main.Bearing(4,ib) == 1 % hasM
+        cnt = cnt + 1;
+        MzVal = sol(cnt);
+    end
+
+    % Zuordnung der Werte zu den korrekten Spalten
+    bearingReactions(ib, :) = [ib, RxVal, RzVal, MzVal];
+    end
+
+    if main.Bearing(1,jBear)==l
+    bearingReactions(jBear, :) = [jBear, -results.Fx(l), -results.Fz(l), -results.Mb(l*1.00001)];
+    end
+
     results.BearingForces = bearingReactions;
 
     %######################################################
