@@ -1,10 +1,11 @@
-function sendAnalytics(eventType, additionalData)
+function sendAnalytics(eventType, userId, additionalData)
     % Flask server URL
-    url = 'https://analytics-ingress.schnittgroessen.com/log_event'; % Use Flask server's local IP
+    url = 'http://192.168.1.128:5000/log_event'; % Use Flask server's actual IP
 
     % Construct event data
-    data = struct('event', eventType);
-    if nargin > 1 && ~isempty(additionalData)
+    data = struct('event', eventType, 'user_id', userId);
+    
+    if nargin > 2 && ~isempty(additionalData)
         % Add additional fields if provided
         fields = fieldnames(additionalData);
         for i = 1:numel(fields)
@@ -23,6 +24,7 @@ function sendAnalytics(eventType, additionalData)
         disp(ME.message); % Display error message
     end
 end
+
 
 % Example Usage
 % sendAnalytics('button_press');
