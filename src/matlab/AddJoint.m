@@ -1,14 +1,14 @@
-% Add Joint inputs to main Structure (pos, support in x, support in y,
-% support in Tourque, ID) all Bool, except pos
-function AddJoint(J_Pos, J_Supx, J_Supy, J_Supt)
+% Add Joint inputs to main Structure (Position, XSupport, ZSupport, TSupport, LoadID)
+% all Bool, except pos & ID
+function AddJoint(J_Pos, J_Supx, J_Supz, J_Supt)
 
     global main
     % check if on position is a bearing alredy
     hold = false;
-    [~,N1] = size(main.Bearing);
+    k = length(main.Bearing.Position);
 
-    for i=1:N1
-        if J_Pos == main.Bearing(1,i)
+    for i=1:k
+        if J_Pos == main.Bearing.Position(i)
             hold = true;
             break;
         end
@@ -16,16 +16,17 @@ function AddJoint(J_Pos, J_Supx, J_Supy, J_Supt)
 
     if hold == false 
         % if there was no bearing go on
-        helpJ = [J_Pos; J_Supx; J_Supy; J_Supt; 0];               % Integrate values to help vector
+        main.Joint.Position(end+1) = J_Pos;
+        main.Joint.XSupport(end+1) = J_Supx;
+        main.Joint.ZSupport(end+1) = J_Supz;
+        main.Joint.TSupport(end+1) = J_Supt;
 
-        % Connect vectors with each other & Update Structure
-        main.Joint = cat(2, main.Joint, helpJ);
-
-        ImpOrder(5);                      % Create ID
+        % Create Individual ID
+        ImpOrder(5);
     else
-        % if beraing is there set bearing B_supt to 0
+        % if Beraing is there set bearing B_supt to 0
             % and dont implement sepperate joint
-        main.Bearing(4,i) = 0;
+        main.Bearing.TSupport(i) = 0;
     end
 
 end

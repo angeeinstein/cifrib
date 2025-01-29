@@ -1,4 +1,4 @@
-function IDDelete(ForceID)
+function IDDelete(ForceID) % Has to be updated (new structure)
 %IDDelete Deletes specific Load-Vectors by its ID
 %   Serch for vector with input ID -> Delete force Vector in structure
 

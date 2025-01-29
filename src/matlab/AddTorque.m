@@ -1,11 +1,12 @@
-% Add Tourque inputs to main Structure (Position,Torque,ID)
-function AddTorque(T_Pos, T_Value)
+% Add Tourque inputs to main Structure (Torque,Position,ID)
+function AddTorque(T_Val, T_Pos)
     
     global main
-    helpT = [T_Pos; T_Value; 0];           % Integrate values into help vector
 
-    % Conect vectors with each other & Update Structure
-    main.Torque = cat(2, main.Torque, helpT);
+    % Implement Given Values to Structure
+    main.Torque.Value(end+1) = T_Val;
+    main.Torque.Position(end+1) = T_Pos;
 
-    ImpOrder(2);                      % Create ID
+    % Create Individual ID
+    ImpOrder(2);
 end

@@ -1,4 +1,4 @@
-% undoes last undo(Stepback)
+% undoes last undo(Stepback) Useless
 function StepForward
 
     global main

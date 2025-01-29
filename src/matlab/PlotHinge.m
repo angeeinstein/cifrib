@@ -1,13 +1,13 @@
 function PlotHinge(app)
 global main;
     % for every Joint
-    [~,j] = size(main.Joint);
+    j = length(main.Joint.Position);
     
     for i=1:j
-        if main.Joint(2,i) == 1 && main.Joint(3,i) == 1 && main.Joint(4,i) == 0
+        if main.Joint.XSupport(i) == 1 && main.Joint.ZSupport(i) == 1 && main.Joint.TSupport(i) == 0
             % Plot
             disp('momentjoint')    
-            momentjoint1_pos = main.Joint(1,i); 
+            momentjoint1_pos = main.Joint.Position(i); 
             momentjoint1scale = (main.BarLgh/60);   % size of the joint = 1/60 of bar length
             MomentJoint1X = [0 1 (0.866) (0.5) 0 (-0.5) (-0.866) (-1) (-0.866) (-0.5) 0 (0.5) (0.866) 1] * momentjoint1scale;
             MomentJoint1Y = [0 0 (0.5) (0.866) 1 (0.866) (0.5) 0 (-0.5) (-0.866) (-1) (-0.866) (-0.5) 0] * momentjoint1scale;
@@ -19,10 +19,10 @@ global main;
             axis(app.UIAxes_Setup,'padded')
             hold(app.UIAxes_Setup,'on')
 
-        elseif main.Joint(2,i) == 0 && main.Joint(3,i) == 1 && main.Joint(4,i) == 1
+        elseif main.Joint.XSupport(i) == 0 && main.Joint.ZSupport(i) == 1 && main.Joint.TSupport(i) == 1
             % Plot
             disp('normalforcejoint')
-            normalforcejoint1_pos = main.Joint(1,i);
+            normalforcejoint1_pos = main.Joint.Position(i);
             normalforcejoint1scale = (main.BarLgh/60);   % size of the joint = 1/60 of bar length
             NormalforceJoint1X = [0 (-1)  1 NaN (-3/4) (3/4) NaN 1 (-1)] * normalforcejoint1scale;
             NormalforceJoint1Y = [0 (1/2) (1/2) NaN 0 0 NaN (-1/2) (-1/2)] * normalforcejoint1scale;
@@ -35,10 +35,11 @@ global main;
             axis(app.UIAxes_Setup,'equal')
             axis(app.UIAxes_Setup,'padded')
             hold(app.UIAxes_Setup,'on')
-        elseif main.Joint(2,i) == 1 && main.Joint(3,i) == 0 && main.Joint(4,i) == 1
+
+        elseif main.Joint.XSupport(i) == 1 && main.Joint.ZSupport(i) == 0 && main.Joint.TSupport(i) == 1
             % Plot
             disp('shearforcejoint')
-            shearforcejoint1_pos = main.Joint(1,i); 
+            shearforcejoint1_pos = main.Joint.Position(i); 
             shearforcejoint1scale = (main.BarLgh/60);   % size of the joint = 1/60 of bar length
             ShearforceJoint1X = [0 (1/2) (1/2) NaN (-1/2) (1/2) NaN (-1/2) (-1/2)] * shearforcejoint1scale;
             ShearforceJoint1Y = [0 (-1)  1 NaN 0 0 NaN 1 (-1)] * shearforcejoint1scale;

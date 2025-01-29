@@ -1,12 +1,12 @@
 function PlotDistl(app)
 global main;
-    [~,j] = size(main.Distl);
+    j = length(main.Distl.StartPos);
     for i=1:j
-        distlexponent = main.Distl(5,i);
-        distl_startpos = main.Distl(1,i);    % start position of distl
-        distl_endpos = main.Distl(2,i);   % end position of distl
-        distldirection = sign(main.Distl(6,i));   % 1 or -1 sign(x)
-        distl_startheight = sign(main.Distl(3,i));
+        distlexponent = main.Distl.Exponent(i);
+        distl_startpos = main.Distl.StartPos(i);    % start position of distl
+        distl_endpos = main.Distl.EndPos(i);   % end position of distl
+        distldirection = sign(main.Distl.Pitch(i));   % 1 or -1 sign(x)
+        distl_startheight = sign(main.Distl.StartValue(i));
     
         % Distributed Load
         % define distl
@@ -49,7 +49,7 @@ global main;
             DistlYRotated = DistlRotated(2,:) * distlscale * (1 / main.BarLgh * (distl_endpos - distl_startpos));
             hold(app.UIAxes_Setup,"on")
             plot(app.UIAxes_Setup, DistlXRotated(2:14),DistlYRotated(2:14),'LineWidth',2,'Color',"blue");   % plot distl
-            text(app.UIAxes_Setup, DistlXRotated(1),DistlYRotated(1),strcat("q = (", num2str(main.Distl(3,i)),")+(", num2str(main.Distl(6,i)), '*x^{' , num2str(distlexponent) , '}',") N/m" ),'Fontsize',15,'Color',"blue");   % name distl
+            text(app.UIAxes_Setup, DistlXRotated(1),DistlYRotated(1),strcat("q = (", num2str(main.Distl.StartValue(i)),")+(", num2str(main.Distl.Pitch(i)), '*x^{' , num2str(distlexponent) , '}',") N/m" ),'Fontsize',15,'Color',"blue");   % name distl
                        
             
             grid(app.UIAxes_Setup,'on')

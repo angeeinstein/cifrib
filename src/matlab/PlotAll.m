@@ -16,27 +16,27 @@ global main
     end
     
     % Plot Force if nessesary
-    if ~isempty(main.Force) || any(main.BckInf(2,:) == 1)
+    if ~isempty(main.Force.Value) || any(main.BckInf(2,:) == 1)
         PlotForce(app);
     end
 
     % Plot Tourque if nessesary
-    if ~isempty(main.Torque) || any(main.BckInf(2,:) == 2)
+    if ~isempty(main.Torque.Value) || any(main.BckInf(2,:) == 2)
         PlotTourque(app);
     end
 
     % Plot Distl if nessesary
-    if ~isempty(main.Distl) || any(main.BckInf(2,:) == 3)
+    if ~isempty(main.Distl.StartPos) || any(main.BckInf(2,:) == 3)
         PlotDistl(app);
     end
 
     % Plot Bearing if nessesary
-    if ~isempty(main.Bearing) || any(main.BckInf(2,:) == 4)
+    if ~isempty(main.Bearing.Position) || any(main.BckInf(2,:) == 4)
         PlotBearing(app);
     end
     
     % Plot Hinge if nessesary
-    if ~isempty(main.Joint) || any(main.BckInf(2,:) == 5)
+    if ~isempty(main.Joint.Position) || any(main.BckInf(2,:) == 5)
         PlotHinge(app);
     end
  

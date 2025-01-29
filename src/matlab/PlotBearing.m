@@ -1,8 +1,8 @@
 function PlotBearing(app)
 global main;
-[~,j] = size(main.Bearing);
+j = length(main.Bearing.Position);
     for i = 1:j
-        if main.Bearing(2,i) == 1 && main.Bearing(3,i) == 1 && main.Bearing(4,i) == 1           % Clamped Bearing
+        if main.Bearing.XSupport(i) == 1 && main.Bearing.ZSupport(i) == 1 && main.Bearing.TSupport(i) == 1           % Clamped Bearing
             % Plot
                 clampedsupportscale = main.BarLgh/15;    % size of the support = 1/10 of bar length
                 ClampedSupportX = [0 0 0];
@@ -19,16 +19,16 @@ global main;
         ClampedSupportX NaN ClampedSupportHatching1X NaN ClampedSupportHatching2X NaN ClampedSupportHatching3X NaN ClampedSupportHatching4X; 
         ClampedSupportY NaN ClampedSupportHatching1Y NaN ClampedSupportHatching2Y NaN ClampedSupportHatching3Y NaN ClampedSupportHatching4Y] ...
         * clampedsupportscale;
-                ClampedSupportXRotated = ClampedSupport(1,:) + main.Bearing(1,i);
+                ClampedSupportXRotated = ClampedSupport(1,:) + main.Bearing.Position(i);
                 ClampedSupportYRotated = ClampedSupport(2,:);
                 plot(app.UIAxes_Setup,ClampedSupportXRotated,ClampedSupportYRotated,'LineWidth',2,'Color','k');   % plot bearing2
                 grid(app.UIAxes_Setup,'on')
                 axis(app.UIAxes_Setup,'equal')
                 axis(app.UIAxes_Setup,'padded')
                 hold(app.UIAxes_Setup,'on')
-        elseif main.Bearing(2,i) == 1 && main.Bearing(3,i) == 1 && main.Bearing(4,i) == 0       % Fixed Bearing
+        elseif main.Bearing.XSupport(i) == 1 && main.Bearing.ZSupport(i) == 1 && main.Bearing.TSupport(i) == 0       % Fixed Bearing
             % Plot
-            bearing1_pos = main.Bearing(1,i);   % position of bearing1
+            bearing1_pos = main.Bearing.Position(i);   % position of bearing1
             bearing1_angle = 0; % angle of bearing1
             bearing1hatchingshift = 0;
             bearing1scale = (main.BarLgh/15);    % size of the bearing = 1/10 of bar length
@@ -54,9 +54,9 @@ global main;
             axis(app.UIAxes_Setup,'padded')
             hold(app.UIAxes_Setup,'on')
 
-        elseif main.Bearing(2,i) == 1 && main.Bearing(3,i) == 0 && main.Bearing(4,i) == 0       % Loose Bearing
+        elseif main.Bearing.XSupport(i) == 0 && main.Bearing.ZSupport(i) == 1 && main.Bearing.TSupport(i) == 0       % Loose Bearing
             % Plot
-            bearing2_pos = main.Bearing(1,i);   % position of bearing1
+            bearing2_pos = main.Bearing.Position(i);   % position of bearing1
             bearing2_angle = 0; % angle of bearing1
             % define bearing2
             bearing2hatchingshift = (-1/4);

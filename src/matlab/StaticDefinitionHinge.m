@@ -4,20 +4,20 @@ global main
  % Freedom Variable
     Freed = 3;
 
-    [~,j] = size(main.Joint);
+    j = length(main.Joint.Position);
     for i = 1:j
         % Moment Freedom
-        if main.Joint(2,i) == 1 && main.Joint(3,i) == 1 && main.Joint(4,i) == 0
+        if main.Joint.XSupport(i) == 1 && main.Joint.ZSupport(i) == 1 && main.Joint.TSupport(i) == 0
             % Add 1 to Freedom
             Freed = Freed + 1;
 
         % X Freedom
-        elseif main.Joint(2,i) == 0 && main.Joint(3,i) == 1 && main.Joint(4,i) == 1
+        elseif main.Joint.XSupport(i) == 0 && main.Joint.ZSupport(i) == 1 && main.Joint.TSupport(i) == 1
             % Add 1 to Freedom
             Freed = Freed + 1;
             
         % Y Freedom
-        elseif main.Joint(2,i) == 1 && main.Joint(3,i) == 0 && main.Joint(4,i) == 1
+        elseif main.Joint.XSupport(i) == 1 && main.Joint.ZSupport(i) == 0 && main.Joint.TSupport(i) == 1
             % Add 1 to Freedom
             Freed = Freed + 1;
         end

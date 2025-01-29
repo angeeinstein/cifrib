@@ -10,24 +10,23 @@ function ImpOrder(Ftyp)
     
         % Add unique ID into load vector for later Identification 
         if Ftyp == 1
-            main.Force(4,end) = loadID;
+            main.Force.LoadID(end+1) = loadID;
         elseif Ftyp == 2
-            main.Torque(3,end) = loadID;
+            main.Torque.LoadID(end+1) = loadID;
         elseif Ftyp == 3
-            main.Distl(7,end) = loadID;
+            main.Distl.LoadID(end+1) = loadID;
         elseif Ftyp == 4
-            main.Bearing(5,end) = loadID;
+            main.Bearing.LoadID(end+1) = loadID;
         elseif Ftyp == 5
-            main.Joint(5,end) = loadID;
+            main.Joint.LoadID(end+1) = loadID;
         end
-    
-        % Save Type of Implemented vector
+
         % Give unique ID to New vector
+        main.ImpInf.LoadID(end+1) = loadID;
+
+        % Save Type of Implemented vector
+        main.ImpInf.LoadTyp(end+1)= Ftyp;
         
-        helpI = [loadID;Ftyp];
-    
-        % Conect vectors with each other & Update Structure
-        main.ImpInf = cat(2, main.ImpInf, helpI);  % Save Implementation Order
     
         % Update Structure(reset)
         main.BckInf = zeros(9,0);       % Pretends miss-use of StepForward function 
@@ -37,24 +36,22 @@ function ImpOrder(Ftyp)
 
         % Reuse ID for later Identification 
         if Ftyp == 1
-            main.Force(4,end) = main.BckInf(1,end);
+            main.Force.LoadID(end+1) = main.BckInf(1,end);
         elseif Ftyp == 2
-            main.Torque(3,end) = main.BckInf(1,end);
+            main.Torque.LoadID(end+1) = main.BckInf(1,end);
         elseif Ftyp == 3
-            main.Distl(7,end) = main.BckInf(1,end);
+            main.Distl.LoadID(end+1) = main.BckInf(1,end);
         elseif Ftyp == 4
-            main.Bearing(5,end) = main.BckInf(1,end);
+            main.Bearing.LoadID(end+1) = main.BckInf(1,end);
         elseif Ftyp == 5
-            main.Joint(5,end) = main.BckInf(1,end);
+            main.Joint.LoadID(end+1) = main.BckInf(1,end);
         end
 
-        % Save Type of Implemented vector
         % Give unique ID to New vector
+        main.ImpInf.LoadID = main.BckInf(2,end);
+        % Save Type of Implemented vector
+        main.ImpInf.LoadTyp = Ftyp; 
         
-        helpI = [main.BckInf(2,end);Ftyp];
-    
-        % Conect vectors with each other & Update Structure
-        main.ImpInf = cat(2, main.ImpInf, helpI);  % Save Implementation Order
     end
 
 

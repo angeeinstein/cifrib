@@ -4,13 +4,13 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
 
     q = @(x) 0;
 
-    [~, j1] = size(main.Distl); 
+    j1 = length(main.Distl.StartPos); 
     for i = 1:j1
-        x0    = main.Distl(1,i);
-        x1    = main.Distl(2,i);
-        q0    = main.Distl(3,i);
-        expn  = main.Distl(5,i);
-        pitch = main.Distl(6,i);
+        x0    = main.Distl.StartPos(i);
+        x1    = main.Distl.EndPos(i);
+        q0    = main.Distl.StartValue(i);
+        expn  = main.Distl.Exponent(i);
+        pitch = main.Distl.Pitch(i);
 
         q = @(x) q(x) ...
             + q0        .* ((x - x0) > 0) ...
@@ -32,11 +32,11 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
 
     Fx = @(x) Fx_int(x);
 
-    [~, j2] = size(main.Force);
+    j2 = length(main.Force.Position);
     for i = 1:j2
-        xF   = main.Force(1,i);    % Position
-        phi  = main.Force(2,i);    % Winkel in Grad
-        val  = main.Force(3,i);    % Betrag
+        xF   = main.Force.Position(i);    % Position
+        phi  = main.Force.Angle(i);    % Winkel in Grad
+        val  = main.Force.Value(i);    % Betrag
 
         % Vertikaler (z-)Anteil:
         Fz = @(xx) Fz(xx) - val * sind(phi) * ((xx - xF) > 0);
@@ -46,17 +46,17 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     end
 
 
-    [~, jBear] = size(main.Bearing);
+    jBear = length(main.Bearing.Position);
    
 
     symsVec = [];
     idxMap  = {};
 
     for i = 1:jBear
-       xB    = main.Bearing(1,i);
-       hasFz = main.Bearing(2,i);  % 1 => Rz
-       hasFx = main.Bearing(3,i);  % 1 => Rx
-       hasM  = main.Bearing(4,i);  % 1 => Einspannungsmoment
+       xB    = main.Bearing.Position(i);
+       hasFz = main.Bearing.ZSupport(i);  % 1 => Rz
+       hasFx = main.Bearing.XSupport(i);  % 1 => Rx
+       hasM  = main.Bearing.TSupport(i);  % 1 => Einspannungsmoment
 
        if hasFz == 1
            % Neue Unbekannte Rz:
@@ -81,10 +81,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         val = 0;
         cntLocal = 0;
         for ib = 1:jBear
-            xB    = main.Bearing(1,ib);
-            hasFz = main.Bearing(2,ib);
-            hasFx = main.Bearing(3,ib);
-            hasM  = main.Bearing(4,ib);
+            xB    = main.Bearing.Position(ib);
+            hasFz = main.Bearing.ZSupport(ib);
+            hasFx = main.Bearing.XSupport(ib);
+            hasM  = main.Bearing.TSupport(ib);
 
             if hasFz==1
                 cntLocal = cntLocal+1; 
@@ -101,10 +101,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         val = 0;
         cntLocal = 0;
         for ib = 1:jBear
-            xB    = main.Bearing(1,ib);
-            hasFz = main.Bearing(2,ib);
-            hasFx = main.Bearing(3,ib);
-            hasM  = main.Bearing(4,ib);
+            xB    = main.Bearing.Position(ib);
+            hasFz = main.Bearing.ZSupport(ib);
+            hasFx = main.Bearing.XSupport(ib);
+            hasM  = main.Bearing.TSupport(ib);
 
             if hasFz==1
                 cntLocal = cntLocal+1; 
@@ -124,9 +124,9 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     function val = Fz_pointloads(xx)
         val = 0;
         for ii = 1:j2
-            xF   = main.Force(1,ii);
-            phi  = main.Force(2,ii);
-            valF = main.Force(3,ii);
+            xF   = main.Force.Position(ii);
+            phi  = main.Force.Angle(ii);
+            valF = main.Force.Value(ii);
             val = val - valF * sind(phi)*((xx - xF) > 0);
         end
     end
@@ -135,9 +135,9 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     function val = Fx_pointloads(xx)
         val = 0;
         for ii = 1:j2
-            xF   = main.Force(1,ii);
-            phi  = main.Force(2,ii);
-            valF = main.Force(3,ii);
+            xF   = main.Force.Position(ii);
+            phi  = main.Force.Angle(ii);
+            valF = main.Force.Value(ii);
             val = val - valF * cosd(phi)*((xx - xF) > 0);
         end
     end
@@ -152,13 +152,13 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     [x_numM, M_num] = ode45(@(xx, Mv) Fz_int_pointloads(xx), x_span, 0);
     M_int = @(xx) interp1(x_numM, M_num, xx, 'linear', 'extrap');
 
-    [~, j3] = size(main.Torque);
+    j3 = length(main.Torque);
 
     function val = M_torque(xx)
        val = 0;
        for iT = 1:j3
-           xT   = main.Torque(1,iT);
-           valT = main.Torque(2,iT);
+           xT   = main.Torque.Position(iT);
+           valT = main.Torque.Value(iT);
            val = val + valT*((xx - xT)>0);
        end
     end
@@ -167,10 +167,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         val = 0;
         cntLocal = 0;
         for ib = 1:jBear
-           xB    = main.Bearing(1,ib);
-           hasFz = main.Bearing(2,ib);
-           hasFx = main.Bearing(3,ib);
-           hasM  = main.Bearing(4,ib);
+           xB    = main.Bearing.Position(ib);
+           hasFz = main.Bearing.ZSupport(ib);
+           hasFx = main.Bearing.XSupport(ib);
+           hasM  = main.Bearing.TSupport(ib);
 
            % Rz -> linearer Hebelarm => Rz * (xx - xB)
            if hasFz==1
@@ -198,24 +198,23 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     function res = residual(unknow)
         resCnt = 1;
         res = [];
-
-        res(resCnt) = Fx_full(l*1.0001, unknow);
-        resCnt = resCnt+1;
-
         
-        res(resCnt) = Fz_full(l*1.0001, unknow);
+        res(resCnt) = Fx_full(l, unknow);
         resCnt = resCnt+1;
 
-        res(resCnt) = Mb_full(l*1, unknow);
+        res(resCnt) = Fz_full(l, unknow);
+        resCnt = resCnt+1;
+
+        res(resCnt) = Mb_full(l, unknow);
         resCnt = resCnt+1;
 
 
-        [~, jJoint] = size(main.Joint);
+        jJoint = length(main.Joint);
         for jj=1:jJoint
-            xJ   = main.Joint(1,jj);
-            freeX = main.Joint(2,jj); 
-            freeZ = main.Joint(3,jj);
-            freeM = main.Joint(4,jj);
+            xJ   = main.Joint.Position(jj);
+            freeX = main.Joint.XSupport(jj); 
+            freeZ = main.Joint.ZSupport(jj);
+            freeM = main.Joint.TSupport(jj);
 
             if freeZ==0
                 res(resCnt) = Fz_full(xJ, unknow);
@@ -233,12 +232,12 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         end
     end
 
-   initGuess = zeros(length(symsVec),1);  % Startwert 0
-    options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
+    initGuess = zeros(length(symsVec),1);  % Startwert 0
+options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
                    'MaxIter',    1000, ...
                    'MaxFunEvals', 2000);
     sol = fsolve(@residual, initGuess, options);
-    %q_old = q;
+    q_old = q;
 
     % Finale Fz(x)- und Mb(x)-Funktionen:
     Fz = @(xx) Fz_full(xx, sol);
@@ -249,55 +248,35 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     results.Mb = Mb;
     results.Fx = Fx;
 
-    % Auflagerreaktionen protokollieren::
+    % Auflagerreaktionen protokollieren:
     bearingReactions = nan(jBear,4);
     cnt = 0;
-    for ib = 1:jBear
-    RxVal = NaN; RzVal = NaN; MzVal = NaN;
+    indx=[];
+    for ib=1:jBear
+        hasFz = main.Bearing.ZSupport(ib);
+        hasFx = main.Bearing.XSupport(ib);
+        hasM  = main.Bearing.TSupport(ib);
+        
+        RxVal = NaN; RzVal = NaN; MzVal = NaN;
 
-    % Prüfen auf Fx
-    if main.Bearing(3,ib) == 1 % hasFx
-        cnt = cnt + 1;
-        RxVal = sol(cnt);
+        if hasFz==1
+            cnt=cnt+1;
+            RzVal = sol(cnt);
+        end
+        if hasFx==1
+            cnt=cnt+1;
+            RxVal = sol(cnt);
+        end
+        if hasM==1
+            cnt=cnt+1;
+            MzVal = sol(cnt);
+        end
+
+        bearingReactions(ib,:) = [ib,RxVal,RzVal, MzVal];
     end
-
-    % Prüfen auf Fz
-    if main.Bearing(2,ib) == 1 % hasFz
-        cnt = cnt + 1;
-        RzVal = sol(cnt);
-    end
-
-    % Prüfen auf Moment
-    if main.Bearing(4,ib) == 1 % hasM
-        cnt = cnt + 1;
-        MzVal = sol(cnt);
-    end
-
-    % Zuordnung der Werte zu den korrekten Spalten
-    bearingReactions(ib, :) = [ib, RxVal, RzVal, MzVal];
-    end
-
-    if main.Bearing(1,jBear)==l
-    bearingReactions(jBear, :) = [jBear, -results.Fx(l), -results.Fz(l), -results.Mb(l*1.00001)];
-    
-    if main.Bearing(3,jBear)==0
-    bearingReactions(jBear, :) = [jBear, NaN, -results.Fz(l), -results.Mb(l*1.00001)];
-    end
-
-    if main.Bearing(2,ib) == 0% hasFz
-    bearingReactions(jBear, 3) = NaN;
-    end
-
-      if main.Bearing(4,ib) == 0 % hasMb
-    bearingReactions(jBear, 4) = NaN;
-    end
-    
-
-    end
-
     results.BearingForces = bearingReactions;
 
-    %######################################################fggfgfgf
+    %######################################################
     % figure; hold on; grid on;
     % xPlot = linspace(0,l,200);
     % 
