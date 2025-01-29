@@ -1,12 +1,12 @@
 function PlotTourque(app)
 global main;
 
-    [~,j] = size(main.Torque);
+    j = length(main.Torque.Value);
     for i= 1:j
         % Plot
-            moment1_pos = main.Torque(1,i);
+            moment1_pos = main.Torque.Position(i);
             moment1scale = (main.BarLgh/30);   % size of the joint = 1/30 of bar length
-            moment1_sign = main.Torque(2,i);
+            moment1_sign = main.Torque.Value(i);
 
             moment1_direction = sign(moment1_sign);
             Moment1X = [0 NaN 1 (0.866) (0.5) 0 NaN (-1) (-0.866) (-0.5) 0 (0.5) (0.866) 1];
@@ -23,7 +23,7 @@ global main;
             Moment1XRotated = (Moment1(1,:)*moment1_direction) + moment1_pos;
             Moment1YRotated = Moment1(2,:);
             plot(app.UIAxes_Setup, Moment1XRotated(2:22),Moment1YRotated(2:22),'LineWidth',2,'Color','green');
-            text(app.UIAxes_Setup, Moment1XRotated(1),Moment1YRotated(1),strcat("M = ", num2str(main.Torque(2,i)), " Nm"),'Fontsize',15,'Color',"green");   % name moment1
+            text(app.UIAxes_Setup, Moment1XRotated(1),Moment1YRotated(1),strcat("M = ", num2str(main.Torque.Value(i)), " Nm"),'Fontsize',15,'Color',"green");   % name moment1
             grid(app.UIAxes_Setup,'on')
             axis(app.UIAxes_Setup,'equal')
             axis(app.UIAxes_Setup,'padded')

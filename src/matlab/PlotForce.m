@@ -1,11 +1,11 @@
 function PlotForce(app)
 global main;
-    [~,j] = size(main.Force);
+    j = length(main.Force.Value);
     for i=1:j
         % Plot
-            arrow2_angle = main.Force(2,i);    % angle of arrow2
-            arrow2_pos = main.Force(1,i);   % position of arrow2
-            arrow2_sign = sign(main.Force(3,i)); % direction of arrow
+            arrow2_angle = main.Force.Angle(i);    % angle of arrow2
+            arrow2_pos = main.Force.Position(i);   % position of arrow2
+            arrow2_sign = sign(main.Force.Value(i)); % direction of arrow
                 
         % define arrow2
             arrow2_length = 2;
@@ -30,7 +30,7 @@ global main;
             Arrow2XRotated = Arrow2Rotated(1,:) + arrow2_pos;
             Arrow2YRotated = Arrow2Rotated(2,:);
             plot(app.UIAxes_Setup,Arrow2XRotated(2:8),Arrow2YRotated(2:8),'LineWidth',2,'Color','r');   % plot arrow2
-            text(app.UIAxes_Setup,Arrow2XRotated(1),Arrow2YRotated(1),"F = "+ main.Force(3,i) + " N",'Fontsize',15,'Color','r');   % name arrow2
+            text(app.UIAxes_Setup,Arrow2XRotated(1),Arrow2YRotated(1),"F = "+ main.Force.Value(i) + " N",'Fontsize',15,'Color','r');   % name arrow2
             grid(app.UIAxes_Setup,'on')
             axis(app.UIAxes_Setup,'equal')
             axis(app.UIAxes_Setup,'padded')

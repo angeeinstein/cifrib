@@ -6,7 +6,7 @@ function Redo(app)
     % Activate Redo Sign
     main.Redoe = true;
     
-    % add last deleated
+    % Add last deleated
     % Force
     if main.BckInf(2,end) == 1
         AddForce(main.BckInf(3,end), main.BckInf(4,end), main.BckInf(5,end));

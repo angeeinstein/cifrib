@@ -1,13 +1,14 @@
-% Add Bearing inputs to main Structure (pos, support in x, support in y,
-% support in Tourque, ID)  all Bool, except pos
-function AddBearing(B_Pos, B_Supx, B_Supy, B_Supt)
+% Add Bearing inputs to main Structure (Position, XSupport, ZSupport, TSupport, LoadID)
+% all Bool, except pos & ID
+function AddBearing(B_Pos, B_Supx, B_Supz, B_Supt)
     
     global main
 
-    helpB = [B_Pos; B_Supx; B_Supy; B_Supt; 0];    % Integrate values to help vector
+    main.Bearing.Position(end+1) = B_Pos;
+    main.Bearing.XSupport(end+1) = B_Supx;
+    main.Bearing.ZSupport(end+1) = B_Supz;
+    main.Bearing.TSupport(end+1) = B_Supt;
 
-    % Connect vectors with each other & Update Structure
-    main.Bearing = cat(2, main.Bearing, helpB);
-
-    ImpOrder(4);                                % Create ID
+    % Create Individual ID
+    ImpOrder(4);
 end
