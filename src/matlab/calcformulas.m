@@ -1,6 +1,6 @@
 function [q, Fz, Mb, Fx] = calcformulas(l)
 
-    global main results;
+    global  main results;
 
     q = @(x) 0;
 
