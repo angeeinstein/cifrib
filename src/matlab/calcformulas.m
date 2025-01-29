@@ -1,6 +1,6 @@
 function [q, Fz, Mb, Fx] = calcformulas(l)
 
-    global main results;
+    global  main results;
 
     q = @(x) 0;
 
@@ -8,7 +8,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     for i = 1:j1
         x0    = main.Distl.StartPos(i);
         x1    = main.Distl.EndPos(i);
-        q0    = main.Distl.StartValue(i);
+        q0    = main.Distl.(i);
         expn  = main.Distl.Exponent(i);
         pitch = main.Distl.Pitch(i);
 
@@ -152,7 +152,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     [x_numM, M_num] = ode45(@(xx, Mv) Fz_int_pointloads(xx), x_span, 0);
     M_int = @(xx) interp1(x_numM, M_num, xx, 'linear', 'extrap');
 
-    j3 = length(main.Torque);
+    j3 = length(main.Torque.Position);
 
     function val = M_torque(xx)
        val = 0;
@@ -198,10 +198,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     function res = residual(unknow)
         resCnt = 1;
         res = [];
-        
-        res(resCnt) = Fx_full(l, unknow);
-        resCnt = resCnt+1;
 
+        res(resCnt) = Fx_full(l, unknow);
+        resCnt = resCnt+1;     
+        
         res(resCnt) = Fz_full(l, unknow);
         resCnt = resCnt+1;
 
@@ -209,7 +209,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         resCnt = resCnt+1;
 
 
-        jJoint = length(main.Joint);
+        jJoint = length(main.Joint.Position);
         for jj=1:jJoint
             xJ   = main.Joint.Position(jj);
             freeX = main.Joint.XSupport(jj); 
@@ -244,7 +244,25 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
     Mb = @(xx) Mb_full(xx, sol);
     Fx = @(xx) Fx_full(xx, sol);
 
-    results.Fz = Fz;
+if ~isempty(main.Joint.Position)  % Falls Gelenke existieren
+    Mb_modified = @(xx) Mb(xx)- M_torque(xx)- M_reaction(xx, sol);
+
+    x_vals = linspace(0, l, 2000); % Diskretisierung
+    Mb_vals = arrayfun(Mb_modified, x_vals); % Modifizierte Momentwerte
+
+    % Numerische Ableitung
+    dMb_dx = gradient(Mb_vals, x_vals);
+
+    % Erstelle numerische Ableitungsfunktion für Fz
+    Fz_modified = @(xx) interp1(x_vals, dMb_dx, xx, 'nearest', 'extrap');
+
+    % Speichere das korrigierte Fz in results
+    results.Fz = Fz_modified;
+else
+      results.Fz = Fz;
+end
+
+
     results.Mb = Mb;
     results.Fx = Fx;
 
@@ -274,6 +292,11 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
 
         bearingReactions(ib,:) = [ib,RxVal,RzVal, MzVal];
     end
+
+    if main.Bearing.Position(jBear)==l
+    bearingReactions(jBear, :) = [jBear, -results.Fx(l), -results.Fz(l), -results.Mb(l*1.00001)];
+    end
+
     results.BearingForces = bearingReactions;
 
     %######################################################
