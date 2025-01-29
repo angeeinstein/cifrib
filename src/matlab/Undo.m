@@ -29,10 +29,10 @@ function Undo(app)
             main.ImpInf.LoadID(end) = [];
 
 
-    elseif main.ImpInf(2,end) == 2           % Same for Torque
+    elseif main.ImpInf.LoadTyp(end) == 2           % Same for Torque
 
         helpDel1 = [main.Torque.Value(end); main.Torque.Position(end); main.Torque.LoadID(end)];        
-        helpDel2 = [main.ImpInf.LoadTyp(end); main,ImpInf.LoadID(end)];         
+        helpDel2 = [main.ImpInf.LoadTyp(end); main.ImpInf.LoadID(end)];         
 
         heplDel3 = cat(1,helpDel2,helpDel1,0,0,0,0); 
 
@@ -49,9 +49,9 @@ function Undo(app)
             main.ImpInf.LoadTyp(end) = []; 
             main.ImpInf.LoadID(end) = [];
 
-    elseif main.ImpInf(2,end) == 3          % same for Distl
+    elseif main.ImpInf.LoadTyp(end) == 3          % same for Distl
 
-        helpDel1 = [main.Distl.StartPos(end); main.Distl.EndPos(end); main.Distl.Value(end); main.Distl.Sign(end); main.Distl.Exponent(end); main.Distl.Pitch(end); main.Distl.LoadID(end)];      
+        helpDel1 = [main.Distl.StartPos(end); main.Distl.EndPos(end); main.Distl.StartValue(end); main.Distl.Sign(end); main.Distl.Exponent(end); main.Distl.Pitch(end); main.Distl.LoadID(end)];      
         helpDel2 = [main.ImpInf.LoadTyp(end); main,ImpInf.LoadID(end)];         
 
         heplDel3 = cat(1,helpDel2,helpDel1); 
@@ -74,10 +74,10 @@ function Undo(app)
             main.ImpInf.LoadID(end) = [];
 
 
-    elseif main.ImpInf(2,end) == 4          % same for Bearing
+    elseif main.ImpInf.LoadTyp(end) == 4          % same for Bearing
 
         helpDel1 = [main.Bearing.Position(end); main.Bearing.XSupport(end); main.Bearing.ZSupport(end); main.Bearing.TSupport(end); main.Bearing.LoadID(end)];        
-        helpDel2 = [main.ImpInf.LoadTyp(end); main,ImpInf.LoadID(end)];       
+        helpDel2 = [main.ImpInf.LoadTyp(end); main.ImpInf.LoadID(end)];       
 
         heplDel3 = cat(1,helpDel2,helpDel1,0,0); 
 
@@ -96,10 +96,10 @@ function Undo(app)
             main.ImpInf.LoadTyp(end) = []; 
             main.ImpInf.LoadID(end) = [];
 
-    elseif main.ImpInf(2,end) == 5          % same for Joint
+    elseif main.ImpInf.LoadTyp(end) == 5          % same for Joint
 
         helpDel1 = [main.Joint.Position(end); main.Joint.XSupport(end); main.Joint.ZSupport(end); main.Joint.TSupport(end); main.Joint.LoadID(end)]; 
-        helpDel2 = [main.ImpInf.LoadTyp(end); main,ImpInf.LoadID(end)];          
+        helpDel2 = [main.ImpInf.LoadTyp(end); main.ImpInf.LoadID(end)];          
 
         heplDel3 = cat(1,helpDel2,helpDel1,0,0);
 
@@ -118,10 +118,10 @@ function Undo(app)
             main.ImpInf.LoadTyp(end) = []; 
             main.ImpInf.LoadID(end) = [];
 
-    elseif main.ImpInf(2,end) == 6      % Same for Deleted vectors
+    elseif main.ImpInf.LoadTyp(end) == 6      % Same for Deleted vectors
         
         helpDel1 = main.DelInf(:,end);
-        helpDel2 = [main.ImpInf.LoadTyp(end); main,ImpInf.LoadID(end)];
+        helpDel2 = [main.ImpInf.LoadTyp(end); main.ImpInf.LoadID(end)];
 
         heplDel3 = cat(1,helpDel2,helpDel1);
 
