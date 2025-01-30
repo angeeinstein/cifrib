@@ -8,7 +8,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     for i = 1:j1
         x0    = main.Distl.StartPos(i);
         x1    = main.Distl.EndPos(i);
-        q0    = main.Distl.(i);
+        q0    = main.Distl.StartValue(i);
         expn  = main.Distl.Exponent(i);
         pitch = main.Distl.Pitch(i);
 
@@ -247,7 +247,7 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
 if ~isempty(main.Joint.Position)  % Falls Gelenke existieren
     Mb_modified = @(xx) Mb(xx)- M_torque(xx)- M_reaction(xx, sol);
 
-    x_vals = linspace(0, l, 2000); % Diskretisierung
+    x_vals = linspace(0, l, 20000); % Diskretisierung
     Mb_vals = arrayfun(Mb_modified, x_vals); % Modifizierte Momentwerte
 
     % Numerische Ableitung
@@ -294,7 +294,7 @@ end
     end
 
     if main.Bearing.Position(jBear)==l
-    bearingReactions(jBear, :) = [jBear, -results.Fx(l), -results.Fz(l), -results.Mb(l*1.00001)];
+    bearingReactions(jBear, :) = [jBear, -results.Fx(l), -results.Fz(l), NaN];
     end
 
     results.BearingForces = bearingReactions;
