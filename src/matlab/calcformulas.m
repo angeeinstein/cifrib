@@ -8,7 +8,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     for i = 1:j1
         x0    = main.Distl.StartPos(i);
         x1    = main.Distl.EndPos(i);
-        q0    = main.Distl.(i);
+        q0    = main.Distl.StartValue(i);
         expn  = main.Distl.Exponent(i);
         pitch = main.Distl.Pitch(i);
 
