@@ -76,8 +76,7 @@ function structureinitiate()
 
    % Bar Length (Length of the Bar)
         main.BarLgh = zeros(1,0);
-
-
+        
    % Static Definition (not fully implementet jet)
         main.StaticDefinition = zeros(2,0);
 
