@@ -72,7 +72,6 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
        xB    =  BearingLeftToRight(1,i);
        hasFx =  BearingLeftToRight(2,i);  % 1 => Rx
        hasFz =  BearingLeftToRight(3,i);  % 1 => Rz
-       
        hasM  =  BearingLeftToRight(4,i);  % 1 => Einspannungsmoment
 
        if hasFz == 1
@@ -251,8 +250,8 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
 
     initGuess = zeros(length(symsVec),1);  % Startwert 0
 options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
-                   'MaxIter',    1000, ...
-                   'MaxFunEvals', 2000);
+                   'MaxIter',    1500, ...
+                   'MaxFunEvals', 20000);
     sol = fsolve(@residual, initGuess, options);
     q_old = q;
 
@@ -261,25 +260,25 @@ options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfor
     Mb = @(xx) Mb_full(xx, sol);
     Fx = @(xx) Fx_full(xx, sol);
 
-if ~isempty(main.Joint.Position)  % Falls Gelenke existieren
-    Mb_modified = @(xx) Mb(xx)- M_torque(xx)- M_reaction(xx, sol);
+% if ~isempty(main.Joint.Position)  % Falls Gelenke existieren
+%     Mb_modified = @(xx) Mb(xx)- M_torque(xx)- M_reaction(xx, sol);
+% 
+%     x_vals = linspace(0, l, 20000); % Diskretisierung
+%     Mb_vals = arrayfun(Mb_modified, x_vals); % Modifizierte Momentwerte
+% 
+%     % Numerische Ableitung
+%     dMb_dx = gradient(Mb_vals, x_vals);
+% 
+%     % Erstelle numerische Ableitungsfunktion für Fz
+%     Fz_modified = @(xx) interp1(x_vals, dMb_dx, xx, 'nearest', 'extrap');
+% 
+%     % Speichere das korrigierte Fz in results
+%     results.Fz = Fz_modified;
+% else
+% 
+% end
 
-    x_vals = linspace(0, l, 20000); % Diskretisierung
-    Mb_vals = arrayfun(Mb_modified, x_vals); % Modifizierte Momentwerte
-
-    % Numerische Ableitung
-    dMb_dx = gradient(Mb_vals, x_vals);
-
-    % Erstelle numerische Ableitungsfunktion für Fz
-    Fz_modified = @(xx) interp1(x_vals, dMb_dx, xx, 'nearest', 'extrap');
-
-    % Speichere das korrigierte Fz in results
-    results.Fz = Fz_modified;
-else
-      results.Fz = Fz;
-end
-
-
+    results.Fz = Fz;
     results.Mb = Mb;
     results.Fx = Fx;
 
