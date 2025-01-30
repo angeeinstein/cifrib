@@ -2,6 +2,22 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
 
     global  main results;
 
+
+    k=length(main.Bearing.Position);
+
+    BearingLeftToRight = nan (4,k);
+    BearingLeftToRight(1,:)=main.Bearing.Position;
+    BearingLeftToRight(2,:)=main.Bearing.XSupport;
+    BearingLeftToRight(3,:)=main.Bearing.ZSupport;
+    BearingLeftToRight(4,:)=main.Bearing.TSupport;
+
+    [~, sortIdx] = sort(BearingLeftToRight(1,:)); 
+    BearingLeftToRight = BearingLeftToRight(:, sortIdx);
+
+
+
+
+
     q = @(x) 0;
 
     j1 = length(main.Distl.StartPos); 
@@ -53,10 +69,11 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     idxMap  = {};
 
     for i = 1:jBear
-       xB    = main.Bearing.Position(i);
-       hasFz = main.Bearing.ZSupport(i);  % 1 => Rz
-       hasFx = main.Bearing.XSupport(i);  % 1 => Rx
-       hasM  = main.Bearing.TSupport(i);  % 1 => Einspannungsmoment
+       xB    =  BearingLeftToRight(1,i);
+       hasFx =  BearingLeftToRight(2,i);  % 1 => Rx
+       hasFz =  BearingLeftToRight(3,i);  % 1 => Rz
+       
+       hasM  =  BearingLeftToRight(4,i);  % 1 => Einspannungsmoment
 
        if hasFz == 1
            % Neue Unbekannte Rz:
@@ -81,10 +98,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         val = 0;
         cntLocal = 0;
         for ib = 1:jBear
-            xB    = main.Bearing.Position(ib);
-            hasFz = main.Bearing.ZSupport(ib);
-            hasFx = main.Bearing.XSupport(ib);
-            hasM  = main.Bearing.TSupport(ib);
+            xB    =  BearingLeftToRight(1,ib);
+            hasFz =  BearingLeftToRight(3,ib);
+            hasFx =  BearingLeftToRight(2,ib);
+            hasM  =  BearingLeftToRight(4,ib);
 
             if hasFz==1
                 cntLocal = cntLocal+1; 
@@ -101,10 +118,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         val = 0;
         cntLocal = 0;
         for ib = 1:jBear
-            xB    = main.Bearing.Position(ib);
-            hasFz = main.Bearing.ZSupport(ib);
-            hasFx = main.Bearing.XSupport(ib);
-            hasM  = main.Bearing.TSupport(ib);
+            xB    =  BearingLeftToRight(1,ib);
+            hasFz =  BearingLeftToRight(3,ib);
+            hasFx =  BearingLeftToRight(2,ib);
+            hasM  =  BearingLeftToRight(4,ib);
 
             if hasFz==1
                 cntLocal = cntLocal+1; 
@@ -167,10 +184,10 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         val = 0;
         cntLocal = 0;
         for ib = 1:jBear
-           xB    = main.Bearing.Position(ib);
-           hasFz = main.Bearing.ZSupport(ib);
-           hasFx = main.Bearing.XSupport(ib);
-           hasM  = main.Bearing.TSupport(ib);
+           xB    =  BearingLeftToRight(1,ib);
+           hasFz =  BearingLeftToRight(3,ib);
+           hasFx =  BearingLeftToRight(2,ib);
+           hasM  =  BearingLeftToRight(4,ib);
 
            % Rz -> linearer Hebelarm => Rz * (xx - xB)
            if hasFz==1
@@ -271,9 +288,9 @@ end
     cnt = 0;
     indx=[];
     for ib=1:jBear
-        hasFz = main.Bearing.ZSupport(ib);
-        hasFx = main.Bearing.XSupport(ib);
-        hasM  = main.Bearing.TSupport(ib);
+        hasFz =  BearingLeftToRight(3,ib);
+        hasFx =  BearingLeftToRight(2,ib);
+        hasM  = BearingLeftToRight(4,ib);
         
         RxVal = NaN; RzVal = NaN; MzVal = NaN;
 
@@ -293,7 +310,7 @@ end
         bearingReactions(ib,:) = [ib,RxVal,RzVal, MzVal];
     end
 
-    if main.Bearing.Position(jBear)==l
+    if BearingLeftToRight(1,jBear)==l
     bearingReactions(jBear, :) = [jBear, -results.Fx(l), -results.Fz(l), NaN];
     end
 
