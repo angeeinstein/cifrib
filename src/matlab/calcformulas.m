@@ -1,6 +1,6 @@
 function [q, Fz, Mb, Fx] = calcformulas(l)
 
-    global  main results;
+    global  main results SSE;
 
 
     k=length(main.Bearing.Position);
@@ -35,10 +35,11 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
             - q0        .* ((x - x1) > 0);
     end
 
+    options = odeset('RelTol', 1e-9, 'AbsTol', 1e-12); % Beispielwerte für hohe Genauigkeit
     q_odefun = @(x, Fval) -q(x);
     x_span   = [0, l];
     F0       = 0;
-    [x_num, F_num] = ode45(q_odefun, x_span, F0);
+    [x_num, F_num] = ode45(q_odefun, x_span, F0,options);
 
     F_int = @(x) interp1(x_num, F_num, x, 'linear', 'extrap');
 
@@ -248,12 +249,13 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
         end
     end
 
-    initGuess = zeros(length(symsVec),1);  % Startwert 0
-options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
-                   'MaxIter',    1500, ...
-                   'MaxFunEvals', 20000);
-    sol = fsolve(@residual, initGuess, options);
+    initGuess = ones(length(symsVec),1);  % Startwert 0
+    options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
+                   'MaxIter',    50000, ...
+                   'MaxFunEvals', 150000);
+    [sol, fval, exitflag, output] = fsolve(@residual, initGuess, options);
     q_old = q;
+    SSE = sum(fval.^2);
 
     % Finale Fz(x)- und Mb(x)-Funktionen:
     Fz = @(xx) Fz_full(xx, sol);
