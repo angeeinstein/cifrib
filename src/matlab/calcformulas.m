@@ -252,7 +252,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     initGuess = ones(length(symsVec),1);  % Startwert 0
     options = optimset('Display','iter', ...        % zum Anzeigen des Iterationsfortschritts
                    'MaxIter',    50000, ...
-                   'MaxFunEvals', 150000);
+                   'MaxFunEvals', 15000000);
     [sol, fval, exitflag, output] = fsolve(@residual, initGuess, options);
     q_old = q;
     SSE = sum(fval.^2);

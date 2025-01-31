@@ -1,11 +1,11 @@
-function sendAnalytics(eventType, userId, additionalData)
+function latestVersion = sendAnalytics(userId, programVersion, eventType, additionalData)
     % Flask server URL
-    url = 'http://192.168.1.128:5000/log_event'; % Use Flask server's actual IP
+    url = 'https://analytics-ingress.schnittgroessen.com/log_event'; % Flask server API
 
     % Construct event data
-    data = struct('event', eventType, 'user_id', userId);
+    data = struct('user_id', userId, 'program_version', programVersion, 'event', eventType);
     
-    if nargin > 2 && ~isempty(additionalData)
+    if nargin > 3 && ~isempty(additionalData)
         % Add additional fields if provided
         fields = fieldnames(additionalData);
         for i = 1:numel(fields)
@@ -13,17 +13,26 @@ function sendAnalytics(eventType, userId, additionalData)
         end
     end
 
-    % Send data to Flask
+    % Configure weboptions with Timeout (e.g., 3 seconds)
     try
-        options = weboptions('ContentType', 'json');
-        response = webwrite(url, data, options);
+        options = weboptions('ContentType', 'json', 'Timeout', 3);
+        response = webwrite(url, data, options); % Send request
         disp(['Logged event: ', eventType]);
-        disp(response); % Display server response
-    catch ME
+        disp(response);
+
+        % Check if server sent a version update
+        if isfield(response, 'latest_version')
+            latestVersion = response.latest_version;
+        else
+            latestVersion = programVersion; % If no version info, assume same version
+        end
+    catch
         disp(['Failed to log event: ', eventType]);
-        disp(ME.message); % Display error message
+        latestVersion = programVersion; % Default to current version if request fails
     end
 end
+
+
 
 
 % Example Usage
@@ -37,7 +46,19 @@ end
 % sendAnalytics('help_button_press');
 % 
 % errorDetails = struct('error_message', 'File not found', 'severity', 'critical');
-% sendAnalytics('error', errorDetails);
+% sendAnalytics(userid,programVersion,'error', errorDetails);
+
+% try
+%     A*B
+% catch errorDetails
+%     try
+%         global userid
+%         sendAnalytics(userid,'error', errorDetails);
+%     catch
+%     end
+% end
+
+
 
 
 

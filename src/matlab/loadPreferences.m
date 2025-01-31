@@ -1,5 +1,6 @@
 function loadPreferences(app)
-% Load the units structure
+    try
+        % Load the units structure
             global unitsData Preferences
 
             try
@@ -39,4 +40,11 @@ function loadPreferences(app)
                     app.Spinner_DistributedLoadsStartPosition.ValueDisplayFormat = strcat('%11.4g ',unitsData.Imperial.Length);
                     app.Spinner_DistributedLoadsEndPosition.ValueDisplayFormat = strcat('%11.4g ',unitsData.Imperial.Length);
             end
+    catch errormessage
+        try
+            global userid programVersion
+            sendAnalytics(userid,programVersion,'error', errormessage);
+        catch
+        end
+    end
 end
