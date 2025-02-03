@@ -39,7 +39,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
     q_odefun = @(x, Fval) -q(x);
     x_span   = [0, l];
     F0       = 0;
-    [x_num, F_num] = ode45(q_odefun, x_span, F0,options);
+    [x_num, F_num] = ode23s(q_odefun, x_span, F0,options);
 
     F_int = @(x) interp1(x_num, F_num, x, 'linear', 'extrap');
 
@@ -166,7 +166,7 @@ function [q, Fz, Mb, Fx] = calcformulas(l)
        val = F_int(xx) + Fz_pointloads(xx);
     end
 
-    [x_numM, M_num] = ode45(@(xx, Mv) Fz_int_pointloads(xx), x_span, 0);
+    [x_numM, M_num] = ode23s(@(xx, Mv) Fz_int_pointloads(xx), x_span, 0);
     M_int = @(xx) interp1(x_numM, M_num, xx, 'linear', 'extrap');
 
     j3 = length(main.Torque.Position);
