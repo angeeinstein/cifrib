@@ -24,6 +24,7 @@ function loadPreferences(app)
             % Apply the user's selected unit system
             %currentSystem = unitsData.SelectedSystem;
             %ApplyUnits(app, currentSystem);
+            
             switch unitsData.SelectedSystem
                 case 'Metric'
                     app.Spinner_BarLength.ValueDisplayFormat = strcat('%11.4g ',unitsData.Metric.Length);
@@ -40,6 +41,7 @@ function loadPreferences(app)
                     app.Spinner_DistributedLoadsStartPosition.ValueDisplayFormat = strcat('%11.4g ',unitsData.Imperial.Length);
                     app.Spinner_DistributedLoadsEndPosition.ValueDisplayFormat = strcat('%11.4g ',unitsData.Imperial.Length);
             end
+
     catch errormessage
         try
             global userid programVersion
