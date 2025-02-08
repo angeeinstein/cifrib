@@ -1,10 +1,12 @@
 function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
 % calcformulasanalytico3
 %   Computes q(x), Fz(x), Mb(x) and Fx(x) for a beam by summing terms of the
-%   form F * ⟨x - pos⟩^power (with ⟨·⟩ equal to (x-pos) for x>=pos and 0 otherwise).
-%   Integration is done term‐by‐term (power rule) so no symbolic toolbox is needed.
-%   Unknown reaction coefficients (from bearings) are determined via boundary
-%   and joint conditions.
+%   form F * ⟨x - pos⟩^power, where the Macaulay bracket ⟨·⟩ equals (x - pos)
+%   for x >= pos and 0 otherwise.
+%
+%   Integration is done term-by-term (using the power rule) so that no symbolic
+%   toolbox is required. Unknown reaction coefficients (from supports) are
+%   determined via boundary and joint conditions.
 %
 %   Global structures "main" and "results" provide input data and store outputs.
 %
@@ -12,13 +14,20 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
 %       l    – the beam length (used for evaluating boundary conditions)
 %
 %   OUTPUT:
-%       q_sample, Fz_sample, Mb_sample, Fx_sample – numeric vectors (sampled along x)
-%           for plotting or further processing.
+%       q_sample, Fz_sample, Mb_sample, Fx_sample – sample vectors (for plotting)
+%
+%   Note: Distributed load terms use an extra field ('base') so that the load is
+%   correctly "turned off" after its end.
 
     global main results;
     
     %% 1. Build the distributed load function q(x)
-    q_terms = [];  % each term is a struct with fields: F, pos, power, isUnknown, unknownIndex
+    % For each distributed load segment (from main.Distl), we add four terms:
+    %   (a) +q0 * H(x - x0)
+    %   (b) +pitch*(x - x0)^expn * H(x - x0)
+    %   (c) -pitch*(x - x0)^expn * H(x - x1)   (with base = x0)
+    %   (d) -q0 * H(x - x1)                   (with base = x0)
+    q_terms = [];
     j1 = length(main.Distl.StartPos);
     for i = 1:j1
         x0    = main.Distl.StartPos(i);
@@ -27,140 +36,123 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
         expn  = main.Distl.Exponent(i);
         pitch = main.Distl.Pitch(i);
         
-        % q0 * heaviside(x - x0)
-        q_terms = addTerm(q_terms, struct('F', q0, 'pos', x0, 'power', 0, 'isUnknown', false));
-        % pitch * (x - x0)^expn * heaviside(x - x0)
-        q_terms = addTerm(q_terms, struct('F', pitch, 'pos', x0, 'power', expn, 'isUnknown', false));
-        % -pitch * (x - x0)^expn * heaviside(x - x1)
-        q_terms = addTerm(q_terms, struct('F', -pitch, 'pos', x1, 'power', expn, 'isUnknown', false));
-        % -q0 * heaviside(x - x1)
-        q_terms = addTerm(q_terms, struct('F', -q0, 'pos', x1, 'power', 0, 'isUnknown', false));
+        % Term (a)
+        q_terms = addTerm(q_terms, struct('F', q0, 'pos', x0, 'power', 0, 'isUnknown', false, 'unknownIndex', []));
+        % Term (b)
+        q_terms = addTerm(q_terms, struct('F', pitch, 'pos', x0, 'power', expn, 'isUnknown', false, 'unknownIndex', []));
+        % Term (c): use 'base' = x0 so that evaluation uses (x - x0)^expn
+        q_terms = addTerm(q_terms, struct('F', -pitch, 'pos', x1, 'base', x0, 'power', expn, 'isUnknown', false, 'unknownIndex', []));
+        % Term (d)
+        q_terms = addTerm(q_terms, struct('F', -q0, 'pos', x1, 'base', x0, 'power', 0, 'isUnknown', false, 'unknownIndex', []));
     end
     
     %% 2. Compute Fz(x) from q(x)
-    % Fz = -∫q(x)dx
+    % Fz = -∫q(x) dx
     Fz_terms = integrateTerms(q_terms);
     Fz_terms = multiplyTerms(Fz_terms, -1);
     
-    %% 3. Process applied forces (affect Fz and Fx)
-    Fx_terms = []; % initialize Fx as a sum of terms
+    %% 3. Process applied forces (affecting Fz and Fx)
+    Fx_terms = [];
     j2 = length(main.Force.Position);
     for i = 1:j2
         xF  = main.Force.Position(i);
         phi = main.Force.Angle(i);
         val = main.Force.Value(i);
         
-        % For Fz: subtract val*sind(phi)*heaviside(x - xF)
-        Fz_terms = addTerm(Fz_terms, struct('F', -val * sind(phi), 'pos', xF, 'power', 0, 'isUnknown', false));
-        % For Fx: add val*cosd(phi)*heaviside(x - xF)
-        Fx_terms = addTerm(Fx_terms, struct('F', val * cosd(phi), 'pos', xF, 'power', 0, 'isUnknown', false));
+        % For Fz: subtract val * sind(phi)*H(x - xF)
+        Fz_terms = addTerm(Fz_terms, struct('F', -val * sind(phi), 'pos', xF, 'power', 0, 'isUnknown', false, 'unknownIndex', []));
+        % For Fx: add val * cosd(phi)*H(x - xF)
+        Fx_terms = addTerm(Fx_terms, struct('F', val * cosd(phi), 'pos', xF, 'power', 0, 'isUnknown', false, 'unknownIndex', []));
     end
     
     %% 4. Bearing support corrections for Fx (normal force)
-    % For each bearing with X support, subtract the reaction.
     jBear = length(main.Bearing.Position);
     if jBear ~= 0
         Fxl = evaluateTerms(Fx_terms, l);  % Fx at the beam end
     end
     bearingReaction_Fx = zeros(1, jBear);
     for i = 1:jBear
-        if main.Bearing.XSupport(i)==1
+        if main.Bearing.XSupport(i) == 1
             xB = main.Bearing.Position(i);
             bearingReaction_Fx(i) = -Fxl;
-            Fx_terms = addTerm(Fx_terms, struct('F', -Fxl, 'pos', xB, 'power', 0, 'isUnknown', false));
+            Fx_terms = addTerm(Fx_terms, struct('F', -Fxl, 'pos', xB, 'power', 0, 'isUnknown', false, 'unknownIndex', []));
         end
     end
     
     %% 5. Add unknown reaction terms for Z support (shear forces)
-    % Unknown coefficients are added to Fz.
     unknownCounter = 0;
     for i = 1:jBear
-        if main.Bearing.ZSupport(i)==1
+        if main.Bearing.ZSupport(i) == 1
             unknownCounter = unknownCounter + 1;
             xB = main.Bearing.Position(i);
-            Fz_terms = addTerm(Fz_terms, struct('F', 1, 'pos', xB, 'power', 0, ...
-                'isUnknown', true, 'unknownIndex', unknownCounter));
+            Fz_terms = addTerm(Fz_terms, struct('F', 1, 'pos', xB, 'power', 0, 'isUnknown', true, 'unknownIndex', unknownCounter));
         end
     end
     
-    %% 6. Compute Mb(x) by integrating Fz(x) and subtracting torques
+    %% 6. Compute Mb(x) by integrating Fz(x) then subtract torques
     Mb_terms = integrateTerms(Fz_terms);
     j3 = length(main.Torque.Position);
     for i = 1:j3
         xT   = main.Torque.Position(i);
         valT = main.Torque.Value(i);
-        Mb_terms = addTerm(Mb_terms, struct('F', -valT, 'pos', xT, 'power', 0, 'isUnknown', false));
+        Mb_terms = addTerm(Mb_terms, struct('F', -valT, 'pos', xT, 'power', 0, 'isUnknown', false, 'unknownIndex', []));
     end
-    % Add unknown moment terms for bearings with T support.
+    % Add unknown moment terms for T support.
     for i = 1:jBear
-        if main.Bearing.TSupport(i)==1
+        if main.Bearing.TSupport(i) == 1
             unknownCounter = unknownCounter + 1;
             xB = main.Bearing.Position(i);
-            Mb_terms = addTerm(Mb_terms, struct('F', 1, 'pos', xB, 'power', 0, ...
-                'isUnknown', true, 'unknownIndex', unknownCounter));
+            Mb_terms = addTerm(Mb_terms, struct('F', 1, 'pos', xB, 'power', 0, 'isUnknown', true, 'unknownIndex', unknownCounter));
         end
     end
-    
-    % Total unknowns for the linear system:
     totalUnknown = unknownCounter;
     
     %% 7. Assemble boundary and joint conditions.
-    % Boundary: Fz(1.01*l) = 0 and Mb(1.01*l) = 0.
-    % Joint: if a degree of freedom is fixed (free?==0) then the function must vanish.
-    % These conditions yield a linear system A*U = b.
     A = []; b = [];
     x_cond = 1.01 * l;
     
-    % Boundary condition on Fz:
     [rowFz, constFz] = evalTermsLinear(Fz_terms, x_cond, totalUnknown);
     A = [A; rowFz];
     b = [b; -constFz];
     
-    % Boundary condition on Mb:
     [rowMb, constMb] = evalTermsLinear(Mb_terms, x_cond, totalUnknown);
     A = [A; rowMb];
     b = [b; -constMb];
     
-    % Joint conditions:
     jJoint = length(main.Joint.Position);
     for jj = 1:jJoint
         xJ = main.Joint.Position(jj);
-        if main.Joint.ZSupport(jj)==0
+        if main.Joint.ZSupport(jj) == 0
             [row, cons] = evalTermsLinear(Fz_terms, xJ, totalUnknown);
             A = [A; row];
             b = [b; -cons];
         end
-        if main.Joint.XSupport(jj)==0
+        if main.Joint.XSupport(jj) == 0
             [row, cons] = evalTermsLinear(Fx_terms, xJ, totalUnknown);
             A = [A; row];
             b = [b; -cons];
         end
-        if main.Joint.TSupport(jj)==0
+        if main.Joint.TSupport(jj) == 0
             [row, cons] = evalTermsLinear(Mb_terms, xJ, totalUnknown);
             A = [A; row];
             b = [b; -cons];
         end
     end
     
-    % Solve for the unknown reaction coefficients.
     if ~isempty(A)
         U = A \ b;
     else
         U = [];
     end
     
-    %% 7a. Extract bearing reaction forces for each bearing.
-    % For bearings with Z support, extract the unknown coefficient from Fz_terms;
-    % but if the bearing is at x = l, evaluate Fz just before l to capture the jump.
-    tol = 1e-6;  % tolerance for matching positions
+    %% 7a. Extract bearing reaction forces.
+    tol = 1e-6;
     bearingReaction_Fz = zeros(1, jBear);
     bearingReaction_Mb = zeros(1, jBear);
     for i = 1:jBear
         pos_i = main.Bearing.Position(i);
-        % For Z support (shear force)
         if main.Bearing.ZSupport(i) == 1
             if abs(pos_i - l) < tol
-                % For a support at the beam end, evaluate Fz just before l.
                 shear_before = evaluateTerms(Fz_terms, l - 1e-6);
                 bearingReaction_Fz(i) = -shear_before;
             else
@@ -174,10 +166,8 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
                 end
             end
         end
-        % For T support (moment reaction)
         if main.Bearing.TSupport(i) == 1
             if abs(pos_i - l) < tol
-                % For a support at the beam end, set moment reaction as NaN (as before)
                 bearingReaction_Mb(i) = NaN;
             else
                 idx_all = find(arrayfun(@(t) isfield(t, 'isUnknown') && t.isUnknown, Mb_terms));
@@ -199,14 +189,13 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
     results.Fx_terms = Fx_terms;
     results.Mb_terms = Mb_terms;
     
-    %% 9. Create function handles from the term lists for plotting.
+    %% 9. Create function handles from term lists for plotting.
     results.Fx = @(x) evaluateTerms(Fx_terms, x);
     results.Fz = @(x) evaluateTerms(Fz_terms, x);
     results.Mb = @(x) evaluateTerms(Mb_terms, x);
     
-    %% 10. Build the bearing reactions matrix (like the old code).
-    % For each bearing, set:
-    %   [bearing index, Rx reaction, Rz reaction, Mz reaction]
+    %% 10. Build the bearing reactions matrix.
+    % Each row: [bearing index, Rx reaction, Rz reaction, Mz reaction]
     bearingReactions = zeros(jBear, 4);
     for i = 1:jBear
         bearingReactions(i, 1) = i;
@@ -226,21 +215,18 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
             bearingReactions(i, 4) = 0;
         end
     end
-    % If the last bearing is exactly at the beam end (x == l), override its row.
     if abs(main.Bearing.Position(jBear) - l) < tol
-        % Evaluate Fx at l and Fz just before l to obtain the reaction jump.
         bearingReactions(jBear, :) = [jBear, -results.Fx(l), -evaluateTerms(Fz_terms, l - 1e-6), NaN];
     end
     results.BearingForces = bearingReactions;
-
-    %% 11. For demonstration, evaluate the functions on a sample grid.
-    x_sample = linspace(0, l, 100);
+    
+    %% 11. Sample evaluation for plots.
+    x_sample  = linspace(0, l, 100);
     q_sample  = arrayfun(@(x) evaluateTerms(q_terms, x), x_sample);
     Fz_sample = arrayfun(@(x) evaluateTerms(Fz_terms, x), x_sample);
     Mb_sample = arrayfun(@(x) evaluateTerms(Mb_terms, x), x_sample);
     Fx_sample = arrayfun(@(x) evaluateTerms(Fx_terms, x), x_sample);
     
-    %% Display solved unknowns and the bearing reactions matrix.
     disp('Solved unknowns:');
     disp(U);
     disp('Bearing Reactions Matrix:');
@@ -250,46 +236,35 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
     %% Nested Helper Functions
     
     function terms = addTerm(terms, term)
-        % Ensures that every term has the same fields.
+        % Define a default term with all required fields.
         defaultTerm = struct('F', 0, 'pos', 0, 'power', 0, 'isUnknown', false, 'unknownIndex', []);
-        defaultFields = fieldnames(defaultTerm);
-        for iField = 1:length(defaultFields)
-            fieldName = defaultFields{iField};
-            if ~isfield(term, fieldName)
-                term.(fieldName) = defaultTerm.(fieldName);
-            end
-        end
-        if ~isempty(terms)
-            allFields = fieldnames(terms(1));
-            missingFields = setdiff(defaultFields, allFields);
-            for iField = 1:length(missingFields)
-                fieldName = missingFields{iField};
-                for j = 1:length(terms)
-                    terms(j).(fieldName) = defaultTerm.(fieldName);
-                end
-            end
-        end
+        % Use orderfields to ensure term has the same field order.
+        term = orderfields(term, defaultTerm);
         if isempty(terms)
             terms = term;
         else
+            for j = 1:length(terms)
+                terms(j) = orderfields(terms(j), defaultTerm);
+            end
             terms(end+1) = term;
         end
     end
 
     function newTerms = integrateTerms(terms)
-        % Applies the power rule to integrate each term.
         newTerms = [];
         for k = 1:length(terms)
             t = terms(k);
             new_t = t;
             new_t.F = t.F / (t.power + 1);
             new_t.power = t.power + 1;
+            if isfield(t, 'base')
+                new_t.base = t.base;
+            end
             newTerms = addTerm(newTerms, new_t);
         end
     end
 
     function newTerms = multiplyTerms(terms, factor)
-        % Multiplies each term by a numeric factor.
         newTerms = terms;
         for k = 1:length(newTerms)
             newTerms(k).F = newTerms(k).F * factor;
@@ -297,26 +272,38 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
     end
 
     function val = evaluateTerms(terms, x)
-        % Evaluates the sum of the terms at a given scalar x.
-        val = 0;
+        % Modified to work vector-wise.
+        % x may be a scalar or a vector.
+        val = zeros(size(x));
         for k = 1:length(terms)
-            if x >= terms(k).pos
-                contribution = (x - terms(k).pos)^(terms(k).power);
-                val = val + terms(k).F * contribution;
+            term = terms(k);
+            % Create a logical mask for where x is above the term's activation.
+            mask = (x >= term.pos);
+            if any(mask)
+                if isfield(term, 'base') && ~isempty(term.base)
+                    base_val = term.base;
+                else
+                    base_val = term.pos;
+                end
+                % Use element-wise exponentiation.
+                val(mask) = val(mask) + term.F * ((x(mask) - base_val).^(term.power));
             end
         end
     end
 
     function [row, knownVal] = evalTermsLinear(terms, x, totalUnknown)
-        % Linearizes the expression at x so that f(x) = row*U + knownVal.
-        if nargin < 3
-            totalUnknown = 0;
-        end
+        % Here x is assumed scalar.
+        if nargin < 3, totalUnknown = 0; end
         row = zeros(1, totalUnknown);
         knownVal = 0;
         for k = 1:length(terms)
             if x >= terms(k).pos
-                c = (x - terms(k).pos)^(terms(k).power);
+                if isfield(terms(k), 'base') && ~isempty(terms(k).base)
+                    base_val = terms(k).base;
+                else
+                    base_val = terms(k).pos;
+                end
+                c = (x - base_val)^(terms(k).power);
                 if isfield(terms(k), 'isUnknown') && terms(k).isUnknown
                     row(terms(k).unknownIndex) = row(terms(k).unknownIndex) + c;
                 else
@@ -327,7 +314,6 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
     end
 
     function newTerms = substituteUnknowns(terms, U)
-        % Replaces unknown coefficients with their solved numeric values.
         newTerms = terms;
         for k = 1:length(newTerms)
             if isfield(newTerms(k), 'isUnknown') && newTerms(k).isUnknown
