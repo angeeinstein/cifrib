@@ -1,11 +1,11 @@
-function latestVersion = sendAnalytics(userId, programVersion, eventType, additionalData)
+function latestVersion = sendAnalytics(sessionId, deviceId, programVersion, eventType, additionalData)
     % Flask server URL
     url = 'https://analytics-ingress.schnittgroessen.com/log_event'; % Flask server API
 
     % Construct event data
-    data = struct('user_id', userId, 'program_version', programVersion, 'event', eventType);
+    data = struct('session_id', sessionId, 'device_id', deviceId, 'program_version', programVersion, 'event', eventType);
     
-    if nargin > 3 && ~isempty(additionalData)
+    if nargin > 4 && ~isempty(additionalData)
         % Add additional fields if provided
         fields = fieldnames(additionalData);
         for i = 1:numel(fields)
