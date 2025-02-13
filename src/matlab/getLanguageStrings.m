@@ -1,6 +1,11 @@
 function langStruct = getLanguageStrings()
     % English Language Strings
     langStruct.english.FileMenu = 'File';
+    langStruct.english.ExamplesMenu = 'Examples';
+    langStruct.english.Example1Menu = 'Example 1';
+    langStruct.english.Example2Menu = 'Example 2';
+    langStruct.english.Example3Menu = 'Example 3';
+    langStruct.english.Example4Menu = 'Example 4';
     langStruct.english.Menu_New = 'New...';
     langStruct.english.OpenMenu = 'Open...';
     langStruct.english.SaveMenu = 'Save';
@@ -78,12 +83,11 @@ function langStruct = getLanguageStrings()
     langStruct.english.Button_DistributedLoadsQuadratic = '';
 
     % Tooltips
-    langStruct.english.Spinner_PointLoadsAngle_Tooltip = '0° = leftward, 90° = upward';
+    langStruct.english.Spinner_PointLoadsAngle_Tooltip = '0° = leftward, 90° = downward';
     langStruct.english.Spinner_PointLoadsForce_Tooltip = 'Enter force value in Newton (N)';
-    langStruct.english.Spinner_DistributedLoadsPitch_Tooltip = 'Defines the pitch for the distributed load';
+    langStruct.english.Spinner_DistributedLoadsPitch_Tooltip = 'Defines the pitch for the distributed load: delta-q(x)/delta-x';
     langStruct.english.Spinner_DistributedLoadsStartValue_Tooltip = 'Starting value of the distributed load in N/m';
-    langStruct.english.Button_HingeShearforce_Tooltip = 'Coming soon';
-    langStruct.english.Button_HingeNormalforce_Tooltip = 'Coming soon';
+    langStruct.english.Spinner_SupportPosition_Tooltip = 'currently working only on the left end';
 
     % UI Axis Labels
     langStruct.english.UIAxes_Setup = 'Setup';
@@ -102,6 +106,9 @@ function langStruct = getLanguageStrings()
     % Placeholders
     langStruct.english.Spinner_BarprofileA_Placeholder = 'A';
     langStruct.english.Spinner_BarprofileB_Placeholder = 'B';
+
+    % Table
+    langStruct.english.UITable_Results_ColumnName = {'Index','[Normal-Force] N','[Shear-Force] N','[Moment] Nm'};
 
     % Preferences Window
     langStruct.english.PreferencesPanel = 'Preferences';
@@ -164,6 +171,11 @@ function langStruct = getLanguageStrings()
     % German Language Strings
     langStruct.german.FileMenu = 'Datei';
     langStruct.german.Menu_New = 'Neu...';
+    langStruct.german.ExamplesMenu = 'Beispiele';
+    langStruct.german.Example1Menu = 'Beispiel 1';
+    langStruct.german.Example2Menu = 'Beispiel 2';
+    langStruct.german.Example3Menu = 'Beispiel 3';
+    langStruct.german.Example4Menu = 'Beispiel 4';
     langStruct.german.OpenMenu = 'Öffnen...';
     langStruct.german.SaveMenu = 'Speichern';
     langStruct.german.SaveAsMenu = 'Speichern unter...';
@@ -187,7 +199,7 @@ function langStruct = getLanguageStrings()
     langStruct.german.SupportsTab = 'Lager';
     langStruct.german.HingesTab = 'Gelenke';
     langStruct.german.PointloadsTab = 'Punktlasten';
-    langStruct.german.DistributedloadsTab = 'Verteilte Lasten';
+    langStruct.german.DistributedloadsTab = 'Streckenlasten';
     langStruct.german.Tab_Results = 'Ergebnisse';
 
     % Panels
@@ -240,12 +252,11 @@ function langStruct = getLanguageStrings()
     langStruct.german.Button_DistributedLoadsQuadratic = '';
 
     % Tooltips
-    langStruct.german.Spinner_PointLoadsAngle_Tooltip = '0° = links, 90° = nach oben';
+    langStruct.german.Spinner_PointLoadsAngle_Tooltip = '0° = links, 90° = nach unten';
     langStruct.german.Spinner_PointLoadsForce_Tooltip = 'Kraftwert in Newton (N) eingeben';
-    langStruct.german.Spinner_DistributedLoadsPitch_Tooltip = 'Definiert die Steigung für die verteilte Last';
+    langStruct.german.Spinner_DistributedLoadsPitch_Tooltip = 'Definiert die Steigung für die verteilte Last: delta-q(x)/delta-x';
     langStruct.german.Spinner_DistributedLoadsStartValue_Tooltip = 'Startwert der verteilten Last in N/m';
-    langStruct.german.Button_HingeShearforce_Tooltip = 'Kommt bald';
-    langStruct.german.Button_HingeNormalforce_Tooltip = 'Kommt bald';
+    langStruct.german.Spinner_SupportPosition_Tooltip = 'Dieses Lager funktioniert momentan nur am linken Ende';
 
     % UI Axis Labels
     langStruct.german.UIAxes_Setup = 'Einrichtung';
@@ -264,6 +275,9 @@ function langStruct = getLanguageStrings()
     % Placeholders
     langStruct.german.Spinner_BarprofileA_Placeholder = 'A';
     langStruct.german.Spinner_BarprofileB_Placeholder = 'B';
+    
+    % Table
+    langStruct.german.UITable_Results_ColumnName = {'Index','[Normalkraft] N','[Querkraft] N','[Moment] Nm'};
 
     % Preferences Window
     langStruct.german.PreferencesPanel = 'Einstellungen';

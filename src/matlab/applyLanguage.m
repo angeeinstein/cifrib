@@ -15,6 +15,11 @@ function applyLanguage(app)
     % Apply text translations
     app.FileMenu.Text = selectedLang.FileMenu;
     app.Menu_New.Text = selectedLang.Menu_New;
+    app.ExamplesMenu.Text = selectedLang.ExamplesMenu;
+    app.Example1Menu.Text = selectedLang.Example1Menu;
+    app.Example2Menu.Text = selectedLang.Example2Menu;
+    app.Example3Menu.Text = selectedLang.Example3Menu;
+    app.Example4Menu.Text = selectedLang.Example4Menu;
     app.OpenMenu.Text = selectedLang.OpenMenu;
     app.SaveMenu.Text = selectedLang.SaveMenu;
     app.SaveAsMenu.Text = selectedLang.SaveAsMenu;
@@ -101,12 +106,14 @@ function applyLanguage(app)
     app.Spinner_PointLoadsForce.Tooltip = {selectedLang.Spinner_PointLoadsForce_Tooltip};
     app.Spinner_DistributedLoadsPitch.Tooltip = {selectedLang.Spinner_DistributedLoadsPitch_Tooltip};
     app.Spinner_DistributedLoadsStartValue.Tooltip = {selectedLang.Spinner_DistributedLoadsStartValue_Tooltip};
-    app.Button_HingeShearforce.Tooltip = {selectedLang.Button_HingeShearforce_Tooltip};
-    app.Button_HingeNormalforce.Tooltip = {selectedLang.Button_HingeNormalforce_Tooltip};
+    app.Spinner_SupportPosition.Tooltip = {selectedLang.Spinner_SupportPosition_Tooltip};
 
     % Apply placeholders (if applicable)
     app.Spinner_BarprofileA.Placeholder = selectedLang.Spinner_BarprofileA_Placeholder;
     app.Spinner_BarprofileB.Placeholder = selectedLang.Spinner_BarprofileB_Placeholder;
+
+    % Apply Table Column Names
+    app.UITable_Results.ColumnName = selectedLang.UITable_Results_ColumnName;
 
     % Apply UI Labels/Headings for dynamically generated text
     title(app.UIAxes_Setup, selectedLang.UIAxes_Setup);
