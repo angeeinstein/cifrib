@@ -15,6 +15,6 @@ function applyLanguageHelp(app)
 
     % Update UI Panel Titles
     app.HelpPanel.Title = selectedLang.HelpPanel;
-    app.TextArea.Value = selectedLang.TextArea;
+    app.HTML.HTMLSource = selectedLang.HelpHTML;
     
 end

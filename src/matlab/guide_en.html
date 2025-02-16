@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 10px;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #004080;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            padding: 10px;
+            width: 90%;
+            max-width: 700px;
+        }
+        .text {
+            flex: 1;
+            padding-right: 10px;
+        }
+        img {
+            max-width: 150px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .wide-img {
+            max-width: 100%;
+            height: auto;
+        }
+        .wide-step {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <h2>Getting Started Guide</h2>
+    <div class="container">
+        <div class="step">
+            <div class="text">
+                <h3>Step 1: Add the Bar</h3>
+                <p>Enter the desired length of the bar in the “Length” field under the Bar Setup panel. Click “Add” to place the bar in the workspace. If you want to evaluate safety, you can also select a material here; otherwise, keep the default "Standard" option.</p>
+            </div>
+            <img src="icons/bar_setup_screenshot.png" alt="Bar Setup Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Step 2 (Optional): Define Bar Profile</h3>
+                <p>Select one of four bar profiles under the “Bar Profile” tab. This is used to compute the safety factor against yielding and fracture.</p>
+            </div>
+            <img src="icons/bar_profile_screenshot.png" alt="Bar Profile Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Step 3: Define Supports</h3>
+                <p>Select the type of support (e.g., clamped, roller, or pinned) from the Support panel. Specify the position and click “Add.”</p>
+            </div>
+            <img src="icons/supports_screenshot.png" alt="Support Setup Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Step 4: Add Joints</h3>
+                <p>Joints allow for specific movement conditions in the structure. You can add rotational joints, shear force joints, or normal force joints. Specify the joint position in the Joints panel and click “Add” to place it.</p>
+            </div>
+            <img src="icons/hinges_screenshot.png" alt="Joints Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Step 5: Add Forces and Moments</h3>
+                <p>Specify the force magnitude, angle, and position in the “Loads” panel. Click “Add” to apply the force or moment.</p>
+            </div>
+            <img src="icons/pointloads_screenshot.png" alt="Forces and Moments Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Step 6: Add Distributed Load</h3>
+                <p>Select constant, linear, or quadratic load. Enter the start and end positions, a start value (which can be left at 0), and a pitch. The pitch is calculated as Δy/Δx, where Δx is the distance between start and end positions, and Δy is the maximum variation in load. If a nonzero start value is also specified, Δy is calculated as qmax minus the start value.</p>
+            </div>
+            <img src="icons/distributed_loads_screenshot.png" alt="Distributed Load Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Step 7: Verify and Calculate</h3>
+                <p>The calculation can only proceed if the system is in static equilibrium. This is indicated by the status lamp and numerical values in the bottom right corner. If the indicator is green, click “Calculate” to proceed.</p>
+            </div>
+            <img src="icons/static_definition_screenshot.png" alt="Static Definition Screenshot">
+        </div>
+        
+        <div class="step wide-step">
+            <div class="text">
+                <h3>Step 8: View the Results</h3>
+                <p>After calculation, you can input a specific position in the bottom right panel to view corresponding values for normal force, shear force, and moment.</p>
+            </div>
+            <img class="wide-img" src="icons/bearing_reactions_screenshot.png" alt="Bearing Reactions Screenshot">
+        </div>
+
+        <div class="step wide-step">
+            <div class="text">
+                <h3>Additional Notes</h3>
+                <p>You can undo or redo actions using the Edit menu at the top. This allows you to easily revert or restore changes during setup.</p>
+                <p>To save your current setup, use the Save option in the File menu. You can later open saved files to reload the setup, avoiding the need to input everything again manually. This also allows you to share project files with others.</p>
+                <p>There are four example setups available in the File menu, which can help you get started quickly.</p>
+                <p>The Export option in the File menu lets you generate a PDF containing your setup and results, making it easy to document your work.</p>
+                <p>For quick access to this guide at any time, navigate to the Help menu.</p>
+            </div>
+            <img class="wide-img" src="icons/file_menu_screenshot.png" alt="File Menu Screenshot">
+            <img class="wide-img" src="icons/edit_menu_screenshot.png" alt="Edit Menu Screenshot">
+        </div>
+    </div>
+</body>
+</html>

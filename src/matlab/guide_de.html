@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 10px;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #004080;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            padding: 10px;
+            width: 90%;
+            max-width: 700px;
+        }
+        .text {
+            flex: 1;
+            padding-right: 10px;
+        }
+        img {
+            max-width: 150px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .wide-img {
+            max-width: 100%;
+            height: auto;
+        }
+        .wide-step {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <h2>Erste Schritte Anleitung</h2>
+    <div class="container">
+        <div class="step">
+            <div class="text">
+                <h3>Schritt 1: Den Balken hinzufügen</h3>
+                <p>Geben Sie die gewünschte Länge des Balkens im Feld "Länge" im Balken-Setup-Panel ein. Klicken Sie auf "Hinzufügen", um den Balken in den Arbeitsbereich zu platzieren. Wenn Sie die Sicherheit bewerten möchten, können Sie hier auch ein Material auswählen, andernfalls behalten Sie die Standardoption "Standard" bei.</p>
+            </div>
+            <img src="icons/bar_setup_screenshot.png" alt="Balken-Setup Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Schritt 2 (Optional): Balkenprofil definieren</h3>
+                <p>Wählen Sie eines von vier Balkenprofilen im Tab "Balkenprofil" aus. Dies wird zur Berechnung des Sicherheitsfaktors gegen Fließen und Bruch verwendet.</p>
+            </div>
+            <img src="icons/bar_profile_screenshot.png" alt="Balkenprofil Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Schritt 3: Lager definieren</h3>
+                <p>Wählen Sie die Art des Lagers (z. B. fest, Rolle oder Gelenk) im Lager-Panel aus. Geben Sie die Position an und klicken Sie auf "Hinzufügen".</p>
+            </div>
+            <img src="icons/supports_screenshot.png" alt="Lager-Setup Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Schritt 4: Gelenke hinzufügen</h3>
+                <p>Gelenke ermöglichen bestimmte Bewegungsbedingungen in der Struktur. Sie können Drehgelenke, Querkräfte-Gelenke oder Normalkraft-Gelenke hinzufügen. Geben Sie die Gelenkposition im Gelenke-Panel an und klicken Sie auf "Hinzufügen", um es zu platzieren.</p>
+            </div>
+            <img src="icons/hinges_screenshot.png" alt="Gelenke Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Schritt 5: Kräfte und Momente hinzufügen</h3>
+                <p>Geben Sie die Größe, den Winkel und die Position der Kraft im "Lasten"-Panel an. Klicken Sie auf "Hinzufügen", um die Kraft oder das Moment anzuwenden.</p>
+            </div>
+            <img src="icons/pointloads_screenshot.png" alt="Kräfte und Momente Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Schritt 6: Verteilte Last hinzufügen</h3>
+                <p>Wählen Sie eine konstante, lineare oder quadratische Last. Geben Sie die Start- und Endpositionen, einen Startwert (der auf 0 bleiben kann) und eine Steigung ein. Die Steigung wird als Δy/Δx berechnet, wobei Δx der Abstand zwischen Start- und Endposition ist und Δy die maximale Laständerung darstellt. Falls ein Startwert ungleich null angegeben ist, wird Δy als qmax minus Startwert berechnet.</p>
+            </div>
+            <img src="icons/distributed_loads_screenshot.png" alt="Verteilte Last Screenshot">
+        </div>
+        
+        <div class="step">
+            <div class="text">
+                <h3>Schritt 7: Überprüfen und Berechnen</h3>
+                <p>Die Berechnung kann nur durchgeführt werden, wenn das System sich im statischen Gleichgewicht befindet. Dies wird durch die Statuslampe und die numerischen Werte in der unteren rechten Ecke angezeigt. Wenn die Anzeige grün ist, klicken Sie auf "Berechnen", um fortzufahren.</p>
+            </div>
+            <img src="icons/static_definition_screenshot.png" alt="Statische Definition Screenshot">
+        </div>
+        
+        <div class="step wide-step">
+            <div class="text">
+                <h3>Zusätzliche Hinweise</h3>
+                <p>Sie können Aktionen über das Menü "Bearbeiten" oben rückgängig machen oder wiederholen. Dadurch können Änderungen im Setup leicht rückgängig gemacht oder wiederhergestellt werden.</p>
+                <p>Verwenden Sie die Speicheroption im Datei-Menü, um Ihr aktuelles Setup zu speichern. Später können Sie gespeicherte Dateien öffnen, um das Setup wiederherzustellen, wodurch eine erneute manuelle Eingabe vermieden wird. Dies ermöglicht auch das Teilen von Projektdateien.</p>
+                <p>Im Datei-Menü stehen vier Beispielprojekte zur Verfügung, um Ihnen den Einstieg zu erleichtern.</p>
+                <p>Die Exportfunktion im Datei-Menü ermöglicht das Erstellen einer PDF-Datei mit Ihrem Setup und den Ergebnissen, um Ihre Arbeit zu dokumentieren.</p>
+                <p>Über das Hilfe-Menü können Sie jederzeit auf diese Anleitung zugreifen.</p>
+            </div>
+            <div class="side-by-side">
+                <img class="wide-img" src="icons/file_menu_screenshot.png" alt="Datei-Menü Screenshot">
+                <img class="wide-img" src="icons/edit_menu_screenshot.png" alt="Bearbeiten-Menü Screenshot">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
