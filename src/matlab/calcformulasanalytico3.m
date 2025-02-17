@@ -288,7 +288,7 @@ function [q_sample, Fz_sample, Mb_sample, Fx_sample] = calcformulasanalytico3(l)
         val = 0;
         for k = 1:length(terms)
             if x >= terms(k).pos
-                contribution = (x - terms(k).pos)^(terms(k).power);
+                contribution = (x - terms(k).pos).^(terms(k).power);
                 val = val + terms(k).F * contribution;
             end
         end
