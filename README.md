@@ -1,129 +1,68 @@
+---
+# README: Structural Analysis and Load Simulation Tool
+
+## Introduction
+This program enables you to perform detailed structural analysis of beams and other structural elements. With this tool, you can define various parameters and loads to assess static equilibrium and determine resulting reactions such as normal forces, shear forces, and bending moments. The guide below will walk you through the essential steps to set up and use the program.
 
 ---
 
-# README: Git Workflow und Befehle
+## Setting Up the Program
 
-## Einführung
-Dieses Projekt verwendet **Git** zur Versionskontrolle. Nachfolgend findest du eine Anleitung zur Einrichtung von Git, einer Liste der wichtigsten Befehle sowie empfohlene Workflows für die Zusammenarbeit im Team.
+1. **Add the Beam:**  
+   - Enter the desired length of the beam in the "Length" field in the Beam Setup panel.  
+   - Click "Add" to place the beam into the workspace.  
+   - Optionally, select a material to evaluate safety (e.g., for yielding or fracture), or leave the default "Standard" option.
 
----
+2. **Define Beam Profile (Optional):**  
+   - Select one of the available beam profiles under the "Bar Profile" tab.  
+   - This profile is used to compute the safety factor against deformation and fracture.
 
-## Git einrichten
+3. **Define Supports:**  
+   - Choose the type of support (e.g., fixed, roller, or pinned) from the Support panel.  
+   - Specify the support position and click "Add."
 
-1. **Git installieren:**  
-   - **Windows:** Git von der offiziellen Seite [https://git-scm.com/download/win](https://git-scm.com/download/win) herunterladen und installieren.  
-   - **Linux:** Mit dem Paketmanager installieren (z. B. `sudo apt-get install git`).  
-   - **macOS:** Mit Homebrew installieren (`brew install git`) oder die vorinstallierte Version nutzen.
+4. **Add Joints:**  
+   - Joints allow you to specify particular movement conditions within the structure.  
+   - Choose between rotational joints, shear force joints, or normal force joints.  
+   - Specify the joint location in the Joints panel and click "Add."
 
-2. **Git konfigurieren:**  
-   Nach der Installation muss Git mit deinem Namen und deiner E-Mail-Adresse eingerichtet werden. Diese Daten erscheinen in den Commits:
-   - git config --global user.name "Dein Name"
-   - git config --global user.email "deine.email@example.com"
+5. **Apply Forces and Moments:**  
+   - In the "Loads" panel, specify the force magnitude, angle, and position.  
+   - Click "Add" to apply the force or moment.
 
-3. **Repository klonen:**  
-   Um mit dem gemeinsamen Repository zu arbeiten, klone es in einen lokalen Ordner:  
-   - git clone URL_des_Repositories  
-   - Danach in den Projektordner wechseln: cd projektname
+6. **Add Distributed Loads:**  
+   - Select between constant, linear, or quadratic load types.  
+   - Enter the start and end positions, an optional start value, and the pitch (calculated as Δy/Δx, where Δx is the distance between the start and end positions, and Δy is the maximum load variation).  
+   - If a nonzero start value is specified, Δy is computed as the difference between the maximum load and the start value.
 
----
+7. **Verify and Calculate:**  
+   - Ensure that the system is in static equilibrium.  
+   - A green status indicator along with numerical values in the bottom right confirms equilibrium.  
+   - Click "Calculate" to perform the analysis.
 
-## Wichtige Git-Befehle
-
-### Repository und Änderungen
-
-- **Status anzeigen:**  
-  git status  
-  Zeigt den aktuellen Zustand deines Arbeitsverzeichnisses und ob es Änderungen gibt, die noch nicht committet wurden.
-
-- **Dateien hinzufügen:**  
-  git add .  
-  Fügt alle Änderungen in der Arbeitskopie zur Staging-Area hinzu (bereit zum Commit).
-
-- **Änderungen committen:**  
-  git commit -m "Beschreibung der Änderungen"  
-  Speichert die Änderungen in der lokalen Versionshistorie mit einer Beschreibung.
+8. **View Results:**  
+   - After calculation, input a specific position in the bottom right panel to view the corresponding values for normal force, shear force, and bending moment.
 
 ---
 
-### Synchronisierung mit Remote
+## Additional Information
 
-- **Änderungen hochladen (Push):**  
-  git push origin main  
-  Lädt die lokalen Commits ins zentrale Remote-Repository hoch.
+- **Editing:**  
+  Use the Undo/Redo functions in the Edit menu to revert or restore changes.
 
-- **Änderungen herunterladen (Pull):**  
-  git pull  
-  Holt die neuesten Änderungen vom Remote-Repository und integriert sie in deinen aktuellen Branch.
+- **Saving and Loading:**  
+  - Use the Save option in the File menu to store your current setup.  
+  - Load saved setups to avoid manual re-entry of parameters, allowing you to share project files with others.
 
-- **Nur Änderungen herunterladen (Fetch):**  
-  git fetch  
-  Holt die neuesten Änderungen vom Remote-Repository, ohne sie zu integrieren. Diese können manuell geprüft werden.
+- **Example Setups:**  
+  Four example setups are provided in the File menu to help you get started quickly.
 
----
+- **Export:**  
+  Generate a PDF of your setup and results using the Export option in the File menu to document your work.
 
-### Branching und Konflikte
-
-#### Branch erstellen und nutzen
-- **Branch erstellen und wechseln:**  
-  git checkout -b branch-name  
-  Erstellt einen neuen Branch mit dem Namen `branch-name` und wechselt direkt dorthin.
-
-- **Branch wechseln:**  
-  git checkout branch-name  
-  Wechselt zu einem bestehenden Branch.
-
-- **Branch mit Hauptbranch mergen:**  
-  git checkout main  
-  git merge branch-name  
-  Wechselt zum Hauptbranch (`main`) und integriert die Änderungen aus `branch-name`.
-
-#### Konflikte lösen
-Wenn beim Mergen Konflikte auftreten, bearbeite die betroffenen Dateien manuell, um die Konflikte zu beheben. Danach:  
-- git add .  
-- git commit -m "Konflikte gelöst"
+- **Help:**  
+  Access this guide anytime via the Help menu.
 
 ---
 
-### Historie und Änderungen
-
-- **Historie anzeigen:**  
-  git log  
-  Zeigt die Liste der bisherigen Commits.
-
-- **Änderungen anzeigen:**  
-  git diff  
-  Zeigt, was in den Dateien seit dem letzten Commit geändert wurde.
-
-- **Dateien aus älterem Commit wiederherstellen:**  
-  git checkout commit-hash -- dateiname  
-  Holt eine bestimmte Datei aus einem älteren Commit zurück.
-
----
-
-## Empfohlener Workflow im Team
-
-1. **Repository aktualisieren:**  
-   - Bevor du mit der Arbeit beginnst, immer die neuesten Änderungen herunterladen:  
-     git pull
-
-2. **Neuen Branch erstellen:**  
-   - Für größere Änderungen oder neue Features einen eigenen Branch anlegen:  
-     git checkout -b feature-name
-
-3. **Änderungen committen:**  
-   - Nach jeder abgeschlossenen Änderung:  
-     git add .  
-     git commit -m "Beschreibung der Änderungen"
-
-4. **Änderungen hochladen:**  
-   - Änderungen in den Branch pushen:  
-     git push origin feature-name
-
-5. **Merge-Request oder Pull-Request stellen:**  
-   - Auf GitHub oder GitLab einen Merge-Request stellen, um Änderungen in den Hauptbranch zu übernehmen.
-
----
-
-Mit diesen Befehlen und Workflows könnt ihr effizient im Team arbeiten. Nutzt Branches, um parallele Entwicklungen zu ermöglichen, und synchronisiert regelmäßig eure Änderungen mit dem Remote-Repository.
-
----
+By following these steps and utilizing the available features, you can efficiently conduct your structural analyses and load simulations. Enjoy the comprehensive functionalities that help you plan and document your projects with precision.
